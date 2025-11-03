@@ -15,3 +15,4 @@ async def on_ready():
         print(f"Error loading cogs or syncing commands: {e}")
 
 token = os.environ.get('BOT_TOKEN')
+bot.run(token)
