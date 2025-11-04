@@ -2,26 +2,26 @@ import discord
 from discord.ext import commands
 from pathlib import Path
 
-RESOURCE_PATH = Path(__file__).resolve().parent.parent / "resources" / "580vnx"
+RESOURCE_PATH = Path(__file__).resolve().parent.parent / "resources" / "880btg"
 font_1byte = RESOURCE_PATH / "display_font_1byte.png"
 font_2byte = RESOURCE_PATH / "display_font_2byte.png"
 token_table = RESOURCE_PATH / "token_table.png"
 
-class fx_580VNX(commands.Cog):
+class fx_880BTG(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(name='580vnx', invoke_without_command=True)
-    async def fx580vnx(self, ctx):
-        await ctx.send("Nhóm lệnh cho máy fx-580 VNX. Sử dụng `!help` để xem các lệnh con.")
+    @commands.group(name='880btg', invoke_without_command=True)
+    async def fx880btg(self, ctx):
+        await ctx.send("Nhóm lệnh cho máy fx-880 BTG. Sử dụng `!help` để xem các lệnh con.")
 
-    @fx580vnx.command(name='display_font', help='Mở file bảng chữ 1 byte và 2 byte.')
+    @fx880btg.command(name='display_font', help='Mở file bảng chữ 1 byte và 2 byte.')
     async def display_font(self, ctx):
         await ctx.send(files=[discord.File(fp=font_1byte), discord.File(fp=font_2byte)])
-
-    @fx580vnx.command(name='token_table', help="Mở file bảng token.")
+    
+    @fx880btg.command(name='token_table', help="Mở file bảng token.")
     async def _token_table(self, ctx):
         await ctx.send(files=[discord.File(fp=token_table)])
 
 async def setup(bot):
-    await bot.add_cog(fx_580VNX(bot))
+    await bot.add_cog(fx_880BTG(bot))
