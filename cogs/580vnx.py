@@ -26,7 +26,7 @@ class fx_580VNX(commands.Cog):
     async def _token_table(self, ctx):
         await ctx.send(files=[discord.File(fp=token_table)])
 
-    def split_by_n_chars(s, n):
+    def split_by_n_chars(self, s, n):
         return [s[i:i+n] for i in range(0, len(s), n)]
 
     def split_hex(self, hex_string: str):
@@ -48,9 +48,9 @@ class fx_580VNX(commands.Cog):
         ]
 
         # Normalize & split; remove any internal 23
-        hex_bytes = split_by_n_chars(hex_string.replace(" ", ""), 2)
+        hex_bytes = self.split_by_n_chars(hex_string.replace(" ", ""), 2)
         hex_bytes = [b.upper() for b in hex_bytes if b and b.upper() != "23"]
-        if len(hex_bytes) >= 21*2:
+        if len(hex_bytes) >= 21:
             return "Quá nhiều byte để nhập vào 3 biến(tối đa 21 byte)"
 
         enterable = [b for b in hex_bytes if b in non_enterable]
