@@ -17,11 +17,92 @@ class fx_580VNX(commands.Cog):
 
     @fx580vnx.command(name='display_font', help='Mở file bảng chữ 1 byte và 2 byte.')
     async def display_font(self, ctx):
-        await ctx.send(files=[discord.File(fp=font_1byte), discord.File(fp=font_2byte)])
+        await ctx.send(files=[
+            discord.File(fp=font_1byte), 
+            discord.File(fp=font_2byte)
+            ])
 
     @fx580vnx.command(name='token_table', help="Mở file bảng token.")
     async def _token_table(self, ctx):
         await ctx.send(files=[discord.File(fp=token_table)])
 
+    def split_by_n_chars(s, n):
+        return [s[i:i+n] for i in range(0, len(s), n)]
+
+    def split_hex(self, hex_string: str):
+        non_enterable = [
+            "00","01","02","03","04","05","06","07","08","09","0A","0B","0C","0D","0E","0F",
+            "10","11","12","13","14","15","16","17","18","19","1A","1B","1C","1D","1E","1F",
+            "24","25","26","27","28","29","2A","2B","2F",
+            "3A","3B","3C","3D","3E","3F",
+            "4C","4D","4E","4F",
+            "54","55","56","57","58","59","5A","5B","5C","5D","5E","5F",
+            "61","62","63","64","65","66","67","6A","6B",
+            "80","81","82","85","86","8A","8B","8C","8D","8E","8F",
+            "90","91","92","93","94","95","96","97","98","99","9A","9B","9C","9D","9E","9F",
+            "A0","A1","A2","A3","A4","AB","AC","AF",
+            "B0","B1","B2","B3","B4","B5","B6","B7","B8","B9","BA","BB","BC","BD","BE","BF",
+            "C1","C2","C3","C4","C5","C6","C7","CB","CC","CD","CE","CF",
+            "D0","D1","D2","D3",
+            "E8","E9","EA","EB","EC","ED","EE","EF"
+        ]
+
+        # Normalize & split; remove any internal 23
+        hex_bytes = split_by_n_chars(hex_string.replace(" ", ""), 2)
+        hex_bytes = [b.upper() for b in hex_bytes if b and b.upper() != "23"]
+        if len(hex_bytes) >= 21*2:
+            return "Quá nhiều byte để nhập vào 3 biến(tối đa 21 byte)"
+
+        enterable = [b for b in hex_bytes if b in non_enterable]
+
+        # Setup A/B/C
+        A, B, C = "A=1.0000", "B=1.", "C=1."
+        vars_list = [A, B, C]
+        current = 0
+        byte_count = 0
+        calc_bytes = []
+
+        for byte in enterable:
+            if current >= len(vars_list):
+                break
+
+            if byte_count == 7:
+                # last slot for this variable
+                if any(ch in "ABCDEF" for ch in byte):
+                    vars_list[current] += "x10^x20:"
+                    calc_bytes.append("20")
+                    current += 1
+                    if current < len(vars_list):
+                        vars_list[current] += byte
+                        calc_bytes.append(byte)
+                        byte_count = 1
+                    else:
+                        # no next var; just record byte for calc_hex
+                        calc_bytes.append(byte)
+                        byte_count = 0
+                else:
+                    vars_list[current] += f"x10^x{byte}:"
+                    calc_bytes.append(byte)
+                    current += 1
+                    byte_count = 0
+            else:
+                vars_list[current] += byte
+                calc_bytes.append(byte)
+                byte_count += 1
+
+        used = [v for v in vars_list if not (v == "A=1.0000" or v == "B=1." or v == "C=1.")]
+        if used:
+            used[-1] = used[-1] + "23"
+            formatted_result = "\n".join(used)
+        else:
+            formatted_result = ""
+
+        return formatted_result
+    
+    @fx580vnx.command(name='hex_split', help="Tách hex vào các biến A, B, C.")
+    async def hex_split(self, ctx, *, hex_string: str):
+        result = self.split_hex(hex_string)
+        await ctx.send(f"```\n{result}")
+    
 async def setup(bot):
     await bot.add_cog(fx_580VNX(bot))

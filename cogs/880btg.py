@@ -17,7 +17,10 @@ class fx_880BTG(commands.Cog):
 
     @fx880btg.command(name='display_font', help='Mở file bảng chữ 1 byte và 2 byte.')
     async def display_font(self, ctx):
-        await ctx.send(files=[discord.File(fp=font_1byte), discord.File(fp=font_2byte)])
+        await ctx.send(files=[
+            discord.File(fp=font_1byte), 
+            discord.File(fp=font_2byte)
+            ])
     
     @fx880btg.command(name='token_table', help="Mở file bảng token.")
     async def _token_table(self, ctx):
