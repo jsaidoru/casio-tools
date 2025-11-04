@@ -102,7 +102,7 @@ class fx_580VNX(commands.Cog):
     @fx580vnx.command(name='hex_split', help="Tách hex vào các biến A, B, C.")
     async def hex_split(self, ctx, *, hex_string: str):
         result = self.split_hex(hex_string)
-        await ctx.send(f"```\n{result}")
+        await ctx.send(f"```\n{result}\n```")
     
 async def setup(bot):
     await bot.add_cog(fx_580VNX(bot))
