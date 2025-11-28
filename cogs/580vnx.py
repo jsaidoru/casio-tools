@@ -101,8 +101,24 @@ class fx_580VNX(commands.Cog):
     
     @fx580vnx.command(name='hex_split', help="Tách hex vào các biến A, B, C.")
     async def hex_split(self, ctx, *, hex_string: str):
+        await ctx.send("Lưu ý: Bot hiện chưa hỗ trợ các ký tự multibyte(như chữ tiếng Việt)")
         result = self.split_hex(hex_string)
         await ctx.send(f"```\n{result}\n```")
+
+    @fx580vnx.command(name='find_guide', help="Tìm tài liệu liên quan đến fx-580VN X")
+    async def find_guide(self, ctx, *, keyword: str):
+        found_messages = []
+        async for message in ctx.channel.history(limit=1000):
+            if keyword.lower() in message.content.lower():
+                found_messages.append(message)
+        if found_messages:
+            response = f"Tìm thấy {len(found_messages)} guide chứa cụm từ '{keyword}':\n"
+            for msg in found_messages:
+                response += f"- {msg.jump_url}\n"
+        else:
+            response = f"Không tìm thấy guide chứa cụm từ '{keyword}'."
+
+        await ctx.send(response)
     
 async def setup(bot):
     await bot.add_cog(fx_580VNX(bot))
