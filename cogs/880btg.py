@@ -11,7 +11,7 @@ class fx_880BTG(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(name='880btg', invoke_without_command=True)
+    @commands.group(name='880', invoke_without_command=True)
     async def fx880btg(self, ctx):
         await ctx.send("Nhóm lệnh cho máy fx-880 BTG. Sử dụng `!help` để xem các lệnh con.")
 
@@ -25,6 +25,23 @@ class fx_880BTG(commands.Cog):
     @fx880btg.command(name='token_table', help="Mở file bảng token.")
     async def _token_table(self, ctx):
         await ctx.send(files=[discord.File(fp=token_table)])
+    ")
+
+    @fx880btg.command(name='findguide', help="Tìm tài liệu liên quan đến fx-880BTG")
+    async def findguide(self, ctx, *, keyword: str):
+        found_messages = []
+        channel = self.bot.get_channel(1424392139525328951)
+        async for message in channel.history(limit=1000):
+            if keyword.lower() in message.content.lower():
+                found_messages.append(message)
+        if found_messages:
+            response = f"Tìm thấy {len(found_messages)} guide chứa cụm từ '{keyword}':\n"
+            for msg in found_messages:
+                response += f"- {msg.jump_url}\n"
+        else:
+            response = f"Không tìm thấy guide chứa cụm từ '{keyword}'."
+
+        await ctx.send(response)
 
 async def setup(bot):
     await bot.add_cog(fx_880BTG(bot))
