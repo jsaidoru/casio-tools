@@ -11,7 +11,7 @@ class fx_580VNX(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(name='580vnx', invoke_without_command=True)
+    @commands.group(name='580', invoke_without_command=True)
     async def fx580vnx(self, ctx):
         await ctx.send("Nhóm lệnh cho máy fx-580 VNX. Sử dụng `!help` để xem các lệnh con.")
 
@@ -105,8 +105,8 @@ class fx_580VNX(commands.Cog):
         result = self.split_hex(hex_string)
         await ctx.send(f"```\n{result}\n```")
 
-    @fx580vnx.command(name='find_guide', help="Tìm tài liệu liên quan đến fx-580VN X")
-    async def find_guide(self, ctx, *, keyword: str):
+    @fx580vnx.command(name='findguide', help="Tìm tài liệu liên quan đến fx-580VN X")
+    async def findguide(self, ctx, *, keyword: str):
         found_messages = []
         channel = self.bot.get_channel(1424392041735127080)
         async for message in channel.history(limit=1000):
