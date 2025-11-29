@@ -5,4 +5,4 @@ nixPkgs = ["python3", "uv"]
 cmds = ["uv sync"]
 
 [start]
-cmd = "python main.py"
+cmd = "uv run main.py"
