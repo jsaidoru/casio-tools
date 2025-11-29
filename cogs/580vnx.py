@@ -50,10 +50,10 @@ class fx_580VNX(commands.Cog):
         # Normalize & split; remove any internal 23
         hex_bytes = self.split_by_n_chars(hex_string.replace(" ", ""), 2)
         hex_bytes = [b.upper() for b in hex_bytes if b and b.upper() != "23"]
-        if len(hex_bytes) >= 21:
-            return "Quá nhiều byte để nhập vào 3 biến(tối đa 21 byte)"
 
         enterable = [b for b in hex_bytes if b in non_enterable]
+        if len(enterable) >= 21:
+            return "Quá nhiều byte để nhập vào 3 biến(tối đa 21 byte)"
 
         # Setup A/B/C
         A, B, C = "A=1.0000", "B=1.", "C=1."
@@ -108,7 +108,8 @@ class fx_580VNX(commands.Cog):
     @fx580vnx.command(name='find_guide', help="Tìm tài liệu liên quan đến fx-580VN X")
     async def find_guide(self, ctx, *, keyword: str):
         found_messages = []
-        async for message in ctx.channel.history(limit=1000):
+        channel = self.bot.get_channel(1424358758477332651)
+        async for message in channel.history(limit=1000):
             if keyword.lower() in message.content.lower():
                 found_messages.append(message)
         if found_messages:
