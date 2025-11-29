@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["python311", "openssl"]
+
+[phases.install]
+cmds = ["uv sync --no-dev --frozen"]
+
+[phases.start]
+cmd = "python main.py"
