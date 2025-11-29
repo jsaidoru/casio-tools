@@ -13,7 +13,7 @@ class fx_880BTG(commands.Cog):
 
     @commands.group(name='880', invoke_without_command=True)
     async def fx880btg(self, ctx):
-        await ctx.send("Nhóm lệnh cho máy fx-880 BTG. Sử dụng `!help` để xem các lệnh con.")
+        await ctx.send("Nhóm lệnh cho máy fx-880 BTG. Sử dụng `c!help 880` để xem các lệnh con.")
 
     @fx880btg.command(name='display_font', help='Mở file bảng chữ 1 byte và 2 byte.')
     async def display_font(self, ctx):
