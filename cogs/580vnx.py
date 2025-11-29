@@ -108,7 +108,7 @@ class fx_580VNX(commands.Cog):
     @fx580vnx.command(name='find_guide', help="Tìm tài liệu liên quan đến fx-580VN X")
     async def find_guide(self, ctx, *, keyword: str):
         found_messages = []
-        channel = self.bot.get_channel(1424358758477332651)
+        channel = self.bot.get_channel(1424392041735127080)
         async for message in channel.history(limit=1000):
             if keyword.lower() in message.content.lower():
                 found_messages.append(message)
