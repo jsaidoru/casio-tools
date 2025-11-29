@@ -25,7 +25,6 @@ class fx_880BTG(commands.Cog):
     @fx880btg.command(name='token_table', help="Mở file bảng token.")
     async def _token_table(self, ctx):
         await ctx.send(files=[discord.File(fp=token_table)])
-    ")
 
     @fx880btg.command(name='findguide', help="Tìm tài liệu liên quan đến fx-880BTG")
     async def findguide(self, ctx, *, keyword: str):
