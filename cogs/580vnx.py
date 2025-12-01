@@ -125,7 +125,7 @@ class fx_580VNX(commands.Cog):
         singlebyte_chars = "𝒙𝒚𝒛…▲▼▸₋$◁&𝑡ᴛₜₕ₅!\"#×%÷'()⋅+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[▫]^_−abcdefghijklmnopqrstuvwxyz{|}~├𝒊𝒆°ʳᵍ∠→∏⇒⌟≤≠≥√∫ᴀʙᴄₙ▶◀⁰¹²³⁴⁵⁶⁷⁸⁹₍₎₀₁₂ꜰɴᴘ𝗔𝗕𝗖𝗗𝗘𝗙𝗣▷∑𝛼𝛾𝜀𝜃𝜆𝜇𝜋𝜎𝜙ℓℏ▮▯₃＿𝐟𝐩𝐧𝝁𝐦𝐤𝐌𝐆𝐓𝐏𝐄𝐹ₚₑᴊᴋ₉Åₘɪ₄∟⟲↻ⁿ"
         all_chars = vietnamese_chars + singlebyte_chars
         for char in text:
-            if char not in all_chars:
+            if char not in all_chars and char != " ":
                 return "Phát hiện ký tự không hợp lệ. Nên hạn chế sử dụng ký tự đặc biệt vì bot rất dễ bị lỗi."
         
         vn_chars_amount = len([x for x in text if x in vietnamese_chars])
