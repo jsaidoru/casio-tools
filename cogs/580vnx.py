@@ -127,12 +127,18 @@ class fx_580VNX(commands.Cog):
         for char in text:
             if char not in all_chars and char != " ":
                 return "Phát hiện ký tự không hợp lệ. Bot chỉ hỗ trợ các ký tự thường dùng."
+        length = 0
+        for c in text:
+            if c in vietnamese_chars:
+                length += 2
+            elif c in singlebyte_chars:
+                length += 1
+            elif c == " ":
+                length += 2
+            else:
+                pass # ờm... còn trường hợp nào khác
         
-        vn_chars_amount = len([x for x in text if x in vietnamese_chars])
-        en_chars_amount = len([x for x in text if x in singlebyte_chars])
-        spaces_amount = len([x for x in text if x == " "])
-        
-        return total - (vn_chars_amount + spaces_amount)*2 - en_chars_amount
+        return total - length
         
     @fx580vnx.command(name="calculatenums", help="Tính NUMS, dùng trong spell")
     async def calculatenums(self, ctx, *, text):
