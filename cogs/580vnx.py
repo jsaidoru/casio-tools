@@ -104,7 +104,6 @@ class fx_580VNX(commands.Cog):
         await ctx.send("Lưu ý: Bot hiện chưa hỗ trợ các ký tự multibyte(như chữ tiếng Việt)")
         result = self.split_hex(hex_string)
         await ctx.send(f"```\n{result}\n```")
-
     @fx580vnx.command(name='findguide', help="Tìm tài liệu liên quan đến fx-580VN X")
     async def findguide(self, ctx, *, keyword: str):
         found_messages = []
@@ -120,6 +119,30 @@ class fx_580VNX(commands.Cog):
             response = f"Không tìm thấy guide chứa cụm từ '{keyword}'."
 
         await ctx.send(response)
-    
+
+    def calculate_nums(total, text):
+        vietnamese_chars = "ẠẮẰẶẤẦẨẬẼẸẾỀỂỄỆỐỒỔỖỘỢỚỜỞỊỎỌỈỦŨỤỲÕắằặấầẩậẽẹếềểễệốồổỗỠƠộờởịỰỨỪỬơớƯÀÁÂÃẢĂẳẵÈÉÊẺÌÍĨỳĐứÒÓÔạỷừửÙÚỹỵÝỡưàáâãảăữẫèéêẻìíĩỉđựòóôõỏọụùúũủýợỮẲẴẪỶỸỴ"
+        singlebyte_chars = "𝒙𝒚𝒛…▲▼▸₋$◁&𝑡ᴛₜₕ₅ !\"#×%÷'()⋅+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[▫]^_−abcdefghijklmnopqrstuvwxyz{|}~├𝒊𝒆°ʳᵍ∠→∏⇒⌟≤≠≥√∫ᴀʙᴄₙ▶◀⁰¹²³⁴⁵⁶⁷⁸⁹₍₎₀₁₂ꜰɴᴘ𝗔𝗕𝗖𝗗𝗘𝗙𝗣▷∑𝛼𝛾𝜀𝜃𝜆𝜇𝜋𝜎𝜙ℓℏ▮▯₃＿𝐟𝐩𝐧𝝁𝐦𝐤𝐌𝐆𝐓𝐏𝐄𝐹ₚₑᴊᴋ₉Åₘɪ₄∟⟲↻ⁿ"
+        all_chars = vietnamese_chars + singlebyte_chars
+        for char in text:
+            if char not in all_chars:
+            return "Phát hiện ký tự không hợp lệ. Nên hạn chế sử dụng ký tự đặc biệt để bot không bị nhầm lẫn."
+        
+        vn_chars_amount = len([x for x in text if x in vietnamese_chars])
+        en_chars_amount = len([x for x in text if x in singlebyte_chars])
+        spaces_amount = len([x for x in text if x == " "])
+        
+        return total - (vn_chars_amount + spaces_amount)*2 - en_chars_amount
+        
+    @fx580vnx.command(name="calculatenums", help="Tính NUMS, dùng trong spell")
+    async def calculatenums(self, ctx, *, text):
+        error_msg = "Phát hiện ký tự không hợp lệ. Nên hạn chế sử dụng ký tự đặc biệt để bot không bị nhầm lẫn."
+        mode100an = calculate_nums(34, text)
+        mode160an = calculate_nums(60, text)
+        mode164an = calculate_nums(64, text)
+        if mode100an == error_msg or mode160an == error_msg or mode164an == error_msg:
+            return await ctx.send(error_msg)
+        
+        await ctx.send(f"Chọn NUMS phù hợp với cách bạn đang spell.\n* 100an: {mode100an}\n* 160an: {mode160an}\n* 164an: {mode164an}\n Nếu tất cả các kết quả đều ra âm thì hết cứu")
 async def setup(bot):
     await bot.add_cog(fx_580VNX(bot))
