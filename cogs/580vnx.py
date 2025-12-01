@@ -121,6 +121,7 @@ class fx_580VNX(commands.Cog):
         await ctx.send(response)
 
     def calculate_nums(self, total, text):
+        print([ (c, ord(c)) for c in text ])
         vietnamese_chars = "ẠẮẰẶẤẦẨẬẼẸẾỀỂỄỆỐỒỔỖỘỢỚỜỞỊỎỌỈỦŨỤỲÕắằặấầẩậẽẹếềểễệốồổỗỠƠộờởịỰỨỪỬơớƯÀÁÂÃẢĂẳẵÈÉÊẺÌÍĨỳĐứÒÓÔạỷừửÙÚỹỵÝỡưàáâãảăữẫèéêẻìíĩỉđựòóôõỏọụùúũủýợỮẲẴẪỶỸỴ"
         singlebyte_chars = "$!\"#×%÷'()+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_−abcdefghijklmnopqrstuvwxyz{|}~"
         all_chars = vietnamese_chars + singlebyte_chars
