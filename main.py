@@ -16,9 +16,19 @@ async def on_ready():
         print(f"Error loading cogs or syncing commands: {e}")
 
 @bot.event
+@bot.event
 async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandInvokeError):
+        error = error.original
+
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send("Lệnh không tồn tại! Sử dụng `c!help` để xem danh sách lệnh.")
+        await ctx.send("Lệnh không tồn tại! Dùng c!help để xem các lệnh.")
+    elif isinstance(error, commands.MissingPermissions):
+        await ctx.send(f"Bạn thiếu các quyền sau để chạy lệnh: {', '.join(error.missing_permissions)}")
+    elif isinstance(error, commands.BadArgument):
+        await ctx.send("Tham số không hợp lệ. Vui lòng thử lại")
+    else:
+        await ctx.send(f"Lệnh gặp sự cố khi chạy: {error}")
 
 token = os.environ.get('BOT_TOKEN')
 bot.run(token)
