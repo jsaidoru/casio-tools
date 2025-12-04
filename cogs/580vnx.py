@@ -4,6 +4,7 @@ from pathlib import Path
 from PIL import Image
 import os
 import uuid
+import numpy as np
 
 RESOURCE_PATH = Path(__file__).resolve().parent.parent / "resources" / "580vnx"
 font_1byte = RESOURCE_PATH / "display_font_1byte.png"
@@ -153,9 +154,30 @@ class fx_580VNX(commands.Cog):
             return await ctx.send(error_msg)
         
         await ctx.send(f"Chọn NUMS phù hợp với cách bạn đang spell.\n* 100an: {mode100an}\n* 160an: {mode160an}\n* 164an: {mode164an}\n Nếu tất cả các kết quả đều ra âm thì hết cứu")
+
+    def txtbits_to_image(path_txt, width, height):
+        with open(path_txt, "r") as f:
+            hex_data = f.read().replace(" ", "").replace("\n", "")
         
+        data = bytes.fromhex(hex_data)
+
+        bits = []
+        for b in data:
+            for i in range(7, -1, -1):
+                bits.append((b >> i) & 1)
+    
+        # limit to the image size
+        bits = bits[:width * height]
+
+        # Convert 1=black, 2=white
+        pixels = np.array(bits, dtype=np.uint8) * 255
+        pixels = pixels.reshape((height, width))
+
+        img = Image.fromarray(pixels, mode="L")
+        return img
+
     @fx580vnx.command(name="p2b", help="Dịch tranh sang hex để inject. p2b là viết tắt của \"picture to bitmap")
-    async def image_tobitmap(self, ctx):
+    async def p2b(self, ctx):
         uid = uuid.uuid4()
 
         if len(ctx.message.attachments) == 0:
@@ -163,6 +185,7 @@ class fx_580VNX(commands.Cog):
 
         img_path = TEMP_FOLDER_PATH / f"image_{uid}.png"
         hex_path = TEMP_FOLDER_PATH / f"heximage_{uid}.txt"
+        hex_png_path = TEMP_FOLDER_PATH / f"heximagepng_{uid}.png"
 
         attachment = ctx.message.attachments[0]
         await attachment.save(img_path)
@@ -193,13 +216,16 @@ class fx_580VNX(commands.Cog):
 
         with open(hex_path, "w", encoding="utf-8") as f:
             f.write(" ".join(hex_list))
+        
+        hex_png = txtbits_to_image(hex_path, width=192, height=63)
+        hex_png.save(hex_png_path)
 
-        await ctx.send(files=[discord.File(fp=hex_path)])
+        await ctx.send(files=[discord.File(fp=hex_png), discord.File(fp=hex_path)])
 
     # cleanup
         os.remove(img_path)
         os.remove(hex_path)
-
+        os.remove(hex_png)
     
 async def setup(bot):
     await bot.add_cog(fx_580VNX(bot))
