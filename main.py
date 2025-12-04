@@ -28,7 +28,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.BadArgument):
         await ctx.send("Tham số không hợp lệ. Vui lòng thử lại")
     else:
-        await ctx.send(f"Lệnh gặp sự cố khi chạy: {error}")
+        await ctx.send(f"Lệnh gặp sự cố khi chạy: ```\n{str(error)}\n```")
 
 token = os.environ.get('BOT_TOKEN')
 bot.run(token)
