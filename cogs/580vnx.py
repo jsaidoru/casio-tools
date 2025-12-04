@@ -155,7 +155,7 @@ class fx_580VNX(commands.Cog):
         
         await ctx.send(f"Chọn NUMS phù hợp với cách bạn đang spell.\n* 100an: {mode100an}\n* 160an: {mode160an}\n* 164an: {mode164an}\n Nếu tất cả các kết quả đều ra âm thì hết cứu")
 
-    def txtbits_to_image(path_txt, width, height):
+    def txtbits_to_image(self, path_txt, width, height):
         with open(path_txt, "r") as f:
             hex_data = f.read().replace(" ", "").replace("\n", "")
         
@@ -217,7 +217,7 @@ class fx_580VNX(commands.Cog):
         with open(hex_path, "w", encoding="utf-8") as f:
             f.write(" ".join(hex_list))
         
-        hex_png = txtbits_to_image(hex_path, width=192, height=63)
+        hex_png = self.txtbits_to_image(hex_path, width=192, height=63)
         hex_png.save(hex_png_path)
 
         await ctx.send(files=[discord.File(fp=hex_png_path), discord.File(fp=hex_path)])
