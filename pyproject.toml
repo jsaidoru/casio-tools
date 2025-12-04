@@ -7,4 +7,5 @@ requires-python = ">=3.13"
 dependencies = [
     "discord>=2.3.2",
     "pillow>=10.4.0",
+    "numpy>=2.2.0",
 ]
