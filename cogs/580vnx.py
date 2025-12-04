@@ -169,7 +169,7 @@ class fx_580VNX(commands.Cog):
         # limit to the image size
         bits = bits[:width * height]
 
-        # Convert 1=black, 2=white
+        # Convert 1=black, 0=white
         pixels = np.array(bits, dtype=np.uint8) * 255
         pixels = pixels.reshape((height, width))
 
@@ -220,12 +220,12 @@ class fx_580VNX(commands.Cog):
         hex_png = txtbits_to_image(hex_path, width=192, height=63)
         hex_png.save(hex_png_path)
 
-        await ctx.send(files=[discord.File(fp=hex_png), discord.File(fp=hex_path)])
+        await ctx.send(files=[discord.File(fp=hex_png_path), discord.File(fp=hex_path)])
 
     # cleanup
         os.remove(img_path)
         os.remove(hex_path)
-        os.remove(hex_png)
+        os.remove(hex_png_path)
     
 async def setup(bot):
     await bot.add_cog(fx_580VNX(bot))
