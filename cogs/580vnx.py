@@ -170,7 +170,7 @@ class fx_580VNX(commands.Cog):
         bits = bits[:width * height]
 
         # Convert 1=black, 0=white
-        pixels = np.array(bits, dtype=np.uint8) * 255
+        pixels = (1 - np.array(bits, dtype=np.uint8)) * 255
         pixels = pixels.reshape((height, width))
 
         img = Image.fromarray(pixels, mode="L")
