@@ -1,12 +1,16 @@
 import discord
 from discord.ext import commands
 from pathlib import Path
+from PIL import Image
+import os
+import uuid
 
 RESOURCE_PATH = Path(__file__).resolve().parent.parent / "resources" / "580vnx"
 font_1byte = RESOURCE_PATH / "display_font_1byte.png"
 font_2byte = RESOURCE_PATH / "display_font_2byte.png"
 token_table = RESOURCE_PATH / "token_table.png"
 
+TEMP_FOLDER_PATH = RESOURCE_PATH = Path(__file__).resolve().parent.parent / "temp"
 class fx_580VNX(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -122,11 +126,11 @@ class fx_580VNX(commands.Cog):
 
     def calculate_nums(self, total, text):
         print([ (c, ord(c)) for c in text ])
-        vietnamese_chars = "ẠẮẰẶẤẦẨẬẼẸẾỀỂỄỆỐỒỔỖỘỢỚỜỞỊỎỌỈỦŨỤỲÕắằặấầẩậẽẹếềểễệốồổỗỠƠộờởịỰỨỪỬơớƯÀÁÂÃẢĂẳẵÈÉÊẺÌÍĨỳĐứÒÓÔạỷừửÙÚỹỵÝỡưàáâãảăữẫèéêẻìíĩỉđựòóôõỏọụùúũủýợỮẲẴẪỶỸỴ"
+        vietnamese_chars = "ẠẮẰẶẤẦẨẬẼẸẾỀỂỄỆỐỒỔỖỘỢỚỜỞỊỎỌỈỦŨỤỲÕắằặấầẩậẽẹếềểễệốồổỗỠƠộờởịỰỨỪỬơớƯÀÁÂÃẢĂẳẵÈÉÊẺÌÍĨỳĐứÒÓÔạỷừửÙÚỹỵÝỡưàáâãảăữẫèéêẻìíĩỉđựòóôõỏọụùúũủýợỮẲẴẪỶỸỴ " # space at the end. do not delete
         singlebyte_chars = "$!\"#×%÷'()+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_−abcdefghijklmnopqrstuvwxyz{|}~"
         all_chars = vietnamese_chars + singlebyte_chars
         for char in text:
-            if char not in all_chars and char != " ":
+            if char not in all_chars:
                 return "Phát hiện ký tự không hợp lệ. Bot chỉ hỗ trợ các ký tự thường dùng."
         length = 0
         for c in text:
@@ -134,8 +138,6 @@ class fx_580VNX(commands.Cog):
                 length += 2
             elif c in singlebyte_chars:
                 length += 1
-            elif c == " ":
-                length += 2
             else:
                 pass # ờm... còn trường hợp nào khác
         
@@ -143,7 +145,7 @@ class fx_580VNX(commands.Cog):
         
     @fx580vnx.command(name="calculatenums", help="Tính NUMS, dùng trong spell")
     async def calculatenums(self, ctx, *, text):
-        error_msg = "Phát hiện ký tự không hợp lệ. Nên hạn chế sử dụng ký tự đặc biệt để bot không bị nhầm lẫn."
+        error_msg = "Phát hiện ký tự không hợp lệ. Bot chỉ hỗ trợ các ký tự thường dùng."
         mode100an = self.calculate_nums(34, text)
         mode160an = self.calculate_nums(60, text)
         mode164an = self.calculate_nums(64, text)
@@ -151,5 +153,53 @@ class fx_580VNX(commands.Cog):
             return await ctx.send(error_msg)
         
         await ctx.send(f"Chọn NUMS phù hợp với cách bạn đang spell.\n* 100an: {mode100an}\n* 160an: {mode160an}\n* 164an: {mode164an}\n Nếu tất cả các kết quả đều ra âm thì hết cứu")
+        
+    @fx580vnx.command(name="p2b", help="Dịch tranh sang hex để inject. p2b là viết tắt của \"picture to bitmap")
+    async def image_tobitmap(self, ctx):
+        uid = uuid.uuid4()
+
+        if len(ctx.message.attachments) == 0:
+            return await ctx.send("```Vui lòng chọn một bức ảnh.```")
+
+        img_path = TEMP_FOLDER_PATH / f"image_{uid}.png"
+        hex_path = TEMP_FOLDER_PATH / f"heximage_{uid}.txt"
+
+        attachment = ctx.message.attachments[0]
+        await attachment.save(img_path)
+
+        image = Image.open(img_path).convert("L")
+        image = image.resize((192,63))  # fx-580 screen resolution
+        w, h = image.size
+        pixels = image.load()
+        hex_list = []
+
+        for y in range(h):
+            byte = 0
+            bit_index = 0
+            for x in range(w):
+                val = pixels[x, y]
+                bit = 0 if val >= 128 else 1
+                byte = (byte << 1) | bit
+                bit_index += 1
+
+                if bit_index == 8:
+                    hex_list.append(f"{byte:02X}")
+                    byte = 0
+                    bit_index = 0
+
+            if bit_index != 0:
+                byte <<= (8 - bit_index)
+                hex_list.append(f"{byte:02X}")
+
+        with open(hex_path, "w", encoding="utf-8") as f:
+            f.write(" ".join(hex_list))
+
+        await ctx.send(files=[discord.File(fp=hex_path)])
+
+    # cleanup
+        os.remove(img_path)
+        os.remove(hex_path)
+
+    
 async def setup(bot):
     await bot.add_cog(fx_580VNX(bot))
