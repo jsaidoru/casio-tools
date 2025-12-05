@@ -7,7 +7,7 @@ font_1byte = RESOURCE_PATH / "display_font_1byte.png"
 font_2byte = RESOURCE_PATH / "display_font_2byte.png"
 token_table = RESOURCE_PATH / "token_table.png"
 
-class fx_880BTG(commands.Cog):
+class fx_880BTG(commands.Cog, name=""):
     def __init__(self, bot):
         self.bot = bot
 
