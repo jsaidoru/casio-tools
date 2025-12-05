@@ -42,7 +42,7 @@ def get_all_commands(cmd: commands.Command, parent=""):
     return cmds
 
 bot.remove_command('help')
-@commands.command(name="help")
+@bot.command(name="help")
 async def help(ctx, *, command_name: str = None):
     embed = discord.Embed(color=discord.Color.blurple())
 
