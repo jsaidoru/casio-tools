@@ -12,7 +12,7 @@ font_2byte = RESOURCE_PATH / "display_font_2byte.png"
 token_table = RESOURCE_PATH / "token_table.png"
 
 TEMP_FOLDER_PATH = Path("/tmp")
-class fx_580VNX(commands.Cog):
+class fx_580VNX(commands.Cog, name=""):
     def __init__(self, bot):
         self.bot = bot
 
