@@ -218,6 +218,9 @@ class fx_580VNX(commands.Cog):
             f.write(" ".join(hex_list))
         
         hex_png = self.txtbits_to_image(hex_path, width=192, height=63)
+        hex_png = hex_png.resize((384, 189), Image.NEAREST)
+        hex_png = hex_png.convert("1")
+
         hex_png.save(hex_png_path)
 
         await ctx.send(files=[discord.File(fp=hex_png_path), discord.File(fp=hex_path)])
