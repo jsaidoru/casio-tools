@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import os
 
-from discord.ext import commands
 intents = discord.Intents.all()
 intents.message_content = True
 
@@ -36,7 +35,7 @@ def get_all_commands(cmd: commands.Command, parent=""):
     if isinstance(cmd, commands.Group):
         cmds.append((qualified_name, cmd.help))
         for sub in cmd.commands:
-            cmds.extend(self.get_all_commands(sub, qualified_name))
+            cmds.extend(get_all_commands(sub, qualified_name))
     else:
         cmds.append((qualified_name, cmd.help))
     return cmds
