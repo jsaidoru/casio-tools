@@ -69,9 +69,9 @@ async def help(ctx, *, command_name: str = None):
             value = ""
             for cmd in commands_list:
                 if isinstance(cmd, commands.Group):
-                    value += f"• `>{cmd.name}` (nhóm lệnh)\n"
+                    value += f"• `{cmd.name}` (nhóm lệnh)\n"
                 else:
-                    value += f"• `>{cmd.name}`\n"
+                    value += f"• `{cmd.name}`\n"
 
             embed.add_field(
                 name=f"📂 {cog}", value=value or "Không tìm thấy lệnh.", inline=False
@@ -90,7 +90,7 @@ async def help(ctx, *, command_name: str = None):
             value = ""
             for sub in cmd.commands:
                 value += (
-                     f"• `>{cmd.name} {sub.name}` - {sub.help or 'Không có mô tả'}\n"
+                     f"• `{cmd.name} {sub.name}` - {sub.help or 'Không có mô tả'}\n"
                 )
             embed.add_field(name="Subcommands", value=value, inline=False)
 
