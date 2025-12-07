@@ -31,7 +31,7 @@ class fx_580VNX(commands.Cog, name=""):
     async def _token_table(self, ctx):
         await ctx.send(files=[discord.File(fp=token_table)])
 
-    def split_bytes(self, s, n):
+    def split_bytes(self, hex_string):
         if len(hex_string) % 2 != 0:
             return False
 
@@ -77,7 +77,7 @@ class fx_580VNX(commands.Cog, name=""):
         
 
         # Normalize & split; remove any internal 23
-        hex_bytes = self.split_bytes(hex_string.replace(" ", ""), 2)
+        hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", "")
         hex_bytes = [b.upper() for b in hex_bytes if b and b.upper() != "23"]
 
         enterable = [b for b in hex_bytes if b in non_enterable]
