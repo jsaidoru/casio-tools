@@ -31,8 +31,24 @@ class fx_580VNX(commands.Cog, name=""):
     async def _token_table(self, ctx):
         await ctx.send(files=[discord.File(fp=token_table)])
 
-    def split_by_n_chars(self, s, n):
-        return [s[i:i+n] for i in range(0, len(s), n)]
+    def split_bytes(self, s, n):
+        if len(hex_string) % 2 != 0:
+            return False
+
+        i = 0
+        bytes = []
+        while i < len(hex_string):
+            byte_1 = hex_string[i:i+2]
+            if byte_1.startswith("F"):
+                byte_2 = hex_string[i+2:i+4]
+                bytes.append(byte_1 + byte_2)
+                i += 4
+            else:
+                byte_1 = hex_string[i:i+2]
+                bytes.append(byte_1)
+                i+=2
+
+        return bytes
 
     def split_hex(self, hex_string: str):
         non_enterable = [
@@ -50,10 +66,18 @@ class fx_580VNX(commands.Cog, name=""):
             "C1","C2","C3","C4","C5","C6","C7","CB","CC","CD","CE","CF",
             "D0","D1","D2","D3",
             "E8","E9","EA","EB","EC","ED","EE","EF"
-        ]
+        ] + [f"{i:04X}" for i in range(int("F000", 16), int("10000", 16)) if i not in ["FD30", "FD31", "FD32", "FD33", "FD34", "FD35", "FD36", "FD37", "FD38", "FD39", "FD3A", "FD3B", "FD3C", "FD3D", "FD3E", "FD3F",
+  "FD40", "FD41", "FD42", "FD43", "FD44", "FD45", "FD46", "FD47", "FD48", "FD49", "FD4A", "FD4B", "FD4C", "FD4D", "FD4E", "FD4F",
+  "FD50", "FD51", "FD52", "FD53", "FD54", "FD55", "FD56", "FD57", "FD58", "FD59", "FD5A", "FD5B", "FD5C", "FD5D", "FD5E",
+  "FE01", "FE02", "FE03", "FE04", "FE05", "FE06", "FE07", "FE08", "FE09", "FE0A", "FE0B", "FE0C", "FE0E", "FE0E", "FE0F",
+  "FE10", "FE11", "FE12", "FE13", "FE14", "FE15", "FE16", "FE17", "FE18", "FE19", "FE1A", "FE1B", "FE1C", "FE1E", "FE1E", "FE1F",
+  "FE20", "FE21", "FE22", "FE23", "FE24", "FE25", "FE26", "FE27", "FE28"
+]]
+
+        
 
         # Normalize & split; remove any internal 23
-        hex_bytes = self.split_by_n_chars(hex_string.replace(" ", ""), 2)
+        hex_bytes = self.split_bytes(hex_string.replace(" ", ""), 2)
         hex_bytes = [b.upper() for b in hex_bytes if b and b.upper() != "23"]
 
         enterable = [b for b in hex_bytes if b in non_enterable]
@@ -106,7 +130,6 @@ class fx_580VNX(commands.Cog, name=""):
     
     @fx580vnx.command(name='hex_split', help="Tách hex vào các biến A, B, C.")
     async def hex_split(self, ctx, *, hex_string: str):
-        await ctx.send("Lưu ý: Bot hiện chưa hỗ trợ các ký tự multibyte(như chữ tiếng Việt)")
         result = self.split_hex(hex_string)
         await ctx.send(f"```\n{result}\n```")
     @fx580vnx.command(name='findguide', help="Tìm tài liệu liên quan đến fx-580VN X")
