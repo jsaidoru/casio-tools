@@ -29,6 +29,36 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send(f"Lệnh gặp sự cố khi chạy: ```\n{str(error)}\n```")
 
+@bot.event
+async def on_message_delete(message):
+    if message.author.bot:
+        return
+
+    sniped_messages[message.channel.id] = {
+        "content": message.content,
+        "author": message.author,
+        "time": message.created_at
+    }
+
+    if message.channel.id not in deleted_message_logs:
+        deleted_message_logs[message.channel.id] = []
+    deleted_message_logs[message.channel.id].append({
+        "content": message.content,
+        "author": message.author,
+        "time": message.created_at
+    })
+
+    await asyncio.sleep(60)
+    if sniped_messages.get(message.channel.id) and sniped_messages[message.channel.id]["content"] == message.content:
+        del sniped_messages[message.channel.id]
+
+    if message.channel.id in deleted_message_logs:
+        deleted_message_logs[message.channel.id] = [
+            msg for msg in deleted_message_logs[message.channel.id] if msg["content"] != message.content
+        ]
+        if not deleted_message_logs[message.channel.id]:
+            del deleted_message_logs[message.channel.id]
+            
 @bot.command(name="snipe", help="Snipe tin nhắn vừa bị xoá")
 async def snipe(ctx):
     snipe_data = sniped_messages.get(ctx.channel.id)
