@@ -29,6 +29,17 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send(f"Lệnh gặp sự cố khi chạy: ```\n{str(error)}\n```")
 
+@bot.command(name="snipe", help="Snipe tin nhắn vừa bị xoá")
+async def snipe(ctx):
+    snipe_data = sniped_messages.get(ctx.channel.id)
+
+    if snipe_data:
+        time_diff = int((discord.utils.utcnow() - snipe_data["time"]).total_seconds())
+        await ctx.send(
+            f"# Tin nhắn bị xoá bởi **{snipe_data['author']}** ({time_diff} giây trước):\n---\n>>> {snipe_data['content']}"
+        )
+    else:
+        await ctx.send("Làm gì có gì để snipe, bớt ảo tưởng đi má.")
 def get_all_commands(cmd: commands.Command, parent=""):
     cmds = []
     qualified_name = f"{parent} {cmd.name}".strip()
