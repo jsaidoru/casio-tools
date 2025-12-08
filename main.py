@@ -29,6 +29,7 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send(f"Lệnh gặp sự cố khi chạy: ```\n{str(error)}\n```")
 
+sniped_messages = {}
 @bot.event
 async def on_message_delete(message):
     if message.author.bot:
