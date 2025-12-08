@@ -61,6 +61,7 @@ async def on_message_delete(message):
             del deleted_message_logs[message.channel.id]
             
 @bot.command(name="snipe", help="Snipe tin nhắn vừa bị xoá")
+@commands.cooldown(1, 36, commands.BucketType.user)
 async def snipe(ctx):
     snipe_data = sniped_messages.get(ctx.channel.id)
 
