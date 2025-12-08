@@ -77,7 +77,7 @@ class fx_580VNX(commands.Cog, name=""):
         
 
         # Normalize & split; remove any internal 23
-        hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", ""))
+        hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", "").upper())
         hex_bytes = [b.upper() for b in hex_bytes if b and b.upper() != "23"]
 
         enterable = [b for b in hex_bytes if b in non_enterable]
