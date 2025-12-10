@@ -88,7 +88,7 @@ class fx_580VNX(commands.Cog, name=""):
         A, B, C = "A=1.0000", "B=1.", "C=1."
         vars_list = [A, B, C]
         current = 0
-        byte_count = 0
+        byte_count = 2
         calc_bytes = []
 
         for byte in enterable:
