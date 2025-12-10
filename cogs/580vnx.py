@@ -81,6 +81,14 @@ class fx_580VNX(commands.Cog, name=""):
         hex_bytes = [b.upper() for b in hex_bytes if b and b.upper() != "23"]
 
         enterable = [b for b in hex_bytes if b in non_enterable]
+        for ibyte in range(len(enterable)-1, -1, -1):
+            byte = enterable.pop(ibyte)
+            if len(byte)==4:
+                hex1=byte[:2]
+                hex2=byte[2:]
+                byte=hex1
+                enterable.insert(ibyte, hex2)
+            enterable.insert(ibyte, byte)
         if len(enterable) >= 21:
             return "Quá nhiều byte để nhập vào 3 biến(tối đa 21 byte)"
 
