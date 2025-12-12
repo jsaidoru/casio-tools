@@ -80,7 +80,18 @@ class fx_580VNX(commands.Cog, name=""):
         hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", "").upper())
         hex_bytes = [b.upper() for b in hex_bytes if b and b.upper() != "23"]
 
-        enterable = [b for b in hex_bytes if b in non_enterable]
+        enterable = []
+        for i, byte in enumerate(hex_bytes):
+            if byte not in non_enterable:
+                continue
+        
+            if len(byte) == 4:
+                if i in (4, 12) and any(ch in "ABCDEF" for ch in byte[2:]):
+                    enterable.append("20")
+                enterable.append(byte[:2])
+                enterable.append(byte[2:])
+            else:
+                enterable.append(byte)
         if len(enterable) >= 21:
             return "Quá nhiều byte để nhập vào 3 biến(tối đa 21 byte)"
 
