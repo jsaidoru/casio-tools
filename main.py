@@ -83,6 +83,11 @@ def get_all_commands(cmd: commands.Command, parent=""):
         cmds.append((qualified_name, cmd.help))
     return cmds
 
+@bot.command(name="memcount", help="Hiển thị số thành viên trong server")
+async def memcount(ctx):
+    member_count = ctx.guild.member_count
+    await ctx.send(f"Server hiện đang có {member_count} thành viên.")
+
 bot.remove_command('help')
 @bot.command(name="help")
 async def help(ctx, *, command_name: str = None):
