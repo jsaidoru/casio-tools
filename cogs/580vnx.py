@@ -173,20 +173,20 @@ class fx_580VNX(commands.Cog, name=""):
 "ImP(","Identity(","UnitV(","Angle(","@","@","@","@","@","@","@","@","@","@","@","@"
 "or","xor","xnor","and","@","=","+","-","×","÷","÷R","⋅","∠","𝗣","𝗖","@"
 "@","@","@","@","@","@","@","@","","","₁","₂","@","@","@","@"
-"−","b","o","d","h","@","@","@","⌟","^(","√(","@","@","@","@","@"
-")","▸t","▸a+b𝒊","▸r∠𝜃","","²","³","%","!","°","ʳ","ᵍ","▫","𝐄","𝐏","𝐓"
+"−","b","o","d","h","@","@","@","⌟","^(","x√(","@","@","@","@","@"
+")","▸t","▸a+b𝒊","▸r∠𝜃","⁻¹","²","³","%","!","°","ʳ","ᵍ","▫","𝐄","𝐏","𝐓"
 "𝐆","𝐌","𝐤","𝐦","𝝁","𝐧","𝐩","𝐟","@","▸Simp","@","@","@","@","@","@"
 ]
         hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", "").upper())
         tokens = []
         for byte in hex_bytes:
             if len(byte) == 4:
-                tokens += f"<{byte}>"
+                tokens.append(f"<{byte}>")
             else:
                 decimal_byte = int(byte, 16)
                 token = singlebyte_table[decimal_byte]
-                tokens += token
-        return " ".join(token)
+                tokens.append(token)
+        return " ".join(tokens)
 
     @fx580vnx.command(name="translatehex", help="Dịch hex sang token")
     async def translatehex(self, ctx, *,  hex_string: str):
