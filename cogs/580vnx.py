@@ -180,7 +180,7 @@ class fx_580VNX(commands.Cog, name=""):
         hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", "").upper())
         tokens = []
         for byte in hex_bytes:
-            if length(byte) == 4:
+            if len(byte) == 4:
                 tokens += f"<{byte}>"
             else:
                 decimal_byte = int(byte, 16)
