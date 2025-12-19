@@ -138,10 +138,11 @@ class fx_580VNX(commands.Cog, name=""):
 
         return formatted_result
     
-    @fx580vnx.command(name='hex_split', help="Tách hex vào các biến A, B, C.")
+    @fx580vnx.command(name='hexsplit', help="Tách hex vào các biến A, B, C.")
     async def hex_split(self, ctx, *, hex_string: str):
         result = self.split_hex(hex_string)
         await ctx.send(f"```\n{result}\n```")
+        
     @fx580vnx.command(name='findguide', help="Tìm tài liệu liên quan đến fx-580VN X")
     async def findguide(self, ctx, *, keyword: str):
         found_messages = []
@@ -158,35 +159,39 @@ class fx_580VNX(commands.Cog, name=""):
 
         await ctx.send(response)
 
-    def calculate_nums(self, total, text):
-        print([ (c, ord(c)) for c in text ])
-        vietnamese_chars = "ẠẮẰẶẤẦẨẬẼẸẾỀỂỄỆỐỒỔỖỘỢỚỜỞỊỎỌỈỦŨỤỲÕắằặấầẩậẽẹếềểễệốồổỗỠƠộờởịỰỨỪỬơớƯÀÁÂÃẢĂẳẵÈÉÊẺÌÍĨỳĐứÒÓÔạỷừửÙÚỹỵÝỡưàáâãảăữẫèéêẻìíĩỉđựòóôõỏọụùúũủýợỮẲẴẪỶỸỴ " # space at the end. do not delete
-        singlebyte_chars = "$!\"#×%÷'()+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_−abcdefghijklmnopqrstuvwxyz{|}~"
-        all_chars = vietnamese_chars + singlebyte_chars
-        for char in text:
-            if char not in all_chars:
-                return "Phát hiện ký tự không hợp lệ. Bot chỉ hỗ trợ các ký tự thường dùng."
-        length = 0
-        for c in text:
-            if c in vietnamese_chars:
-                length += 2
-            elif c in singlebyte_chars:
-                length += 1
+    def translate_hex(self, hex_string: str):
+        singlebyte_table = [	
+"@","<01>","@","@","@","@","@","@","@","@","@","@","@","@","@","@"
+"@","@","@","@","@","@","@","@","@","▯","@","@","@","@","@","@"
+"𝒊","𝒆","𝜋",":","$","?","@","@","@","@","@","@",",","x10",".","@"
+"0","1","2","3","4","5","6","7","8","9","𝗔","𝗕","𝗖","𝗗","𝗘","𝗙"
+"M","Ans","A","B","C","D","E","F","𝒙","𝒚","PreAns","𝒛","𝜃","@","@","@"
+"∑(","∫(","d/d𝒙(","∏(","@","@","@","@","Min(","Max(","Mean(","Sum(","@","@","@","@"
+"(","P(","Q(","R(","Not(","Neg(","Conjg(","Arg(","Abs(","Rnd(","Det(","Trn(","sinh(","cosh(","tanh(","sinh("
+"cosh⁻¹(","tanh⁻¹(","𝒆^(","10^(","√(","ln(","³√(","sin(","cos(","tan(","sin⁻¹(","cos⁻¹(","tan⁻¹(","log(","Pol(","Rec("
+"@","@","@","Int(","Intg(","Ref(","Rref(","RanInt#(","GCD(","LCM(","RndFix(","@","@","@","@","ReP("
+"ImP(","Identity(","UnitV(","Angle(","@","@","@","@","@","@","@","@","@","@","@","@"
+"or","xor","xnor","and","@","=","+","-","×","÷","÷R","⋅","∠","𝗣","𝗖","@"
+"@","@","@","@","@","@","@","@","","","₁","₂","@","@","@","@"
+"−","b","o","d","h","@","@","@","⌟","^(","√(","@","@","@","@","@"
+")","▸t","▸a+b𝒊","▸r∠𝜃","","²","³","%","!","°","ʳ","ᵍ","▫","𝐄","𝐏","𝐓"
+"𝐆","𝐌","𝐤","𝐦","𝝁","𝐧","𝐩","𝐟","@","▸Simp","@","@","@","@","@","@"
+]
+        hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", "").upper())
+        tokens = []
+        for byte in hex_bytes:
+            if length(byte) == 4:
+                tokens += f"<{byte}>"
             else:
-                pass # ờm... còn trường hợp nào khác
-        
-        return total - length
-        
-    @fx580vnx.command(name="calculatenums", help="Tính NUMS, dùng trong spell")
-    async def calculatenums(self, ctx, *, text):
-        error_msg = "Phát hiện ký tự không hợp lệ. Bot chỉ hỗ trợ các ký tự thường dùng."
-        mode100an = self.calculate_nums(34, text)
-        mode160an = self.calculate_nums(60, text)
-        mode164an = self.calculate_nums(64, text)
-        if mode100an == error_msg or mode160an == error_msg or mode164an == error_msg:
-            return await ctx.send(error_msg)
-        
-        await ctx.send(f"Chọn NUMS phù hợp với cách bạn đang spell.\n* 100an: {mode100an}\n* 160an: {mode160an}\n* 164an: {mode164an}\n Nếu tất cả các kết quả đều ra âm thì hết cứu")
+                decimal_byte = int(byte, 16)
+                token = singlebyte_table[decimal_byte]
+                tokens += token
+        return " ".join(token)
+
+    @fx580vnx.command(name="translatehex", help="Dịch hex sang token")
+    async def translatehex(self, hex_string: str):
+        token = self.translate_hex(hex_string)
+        await ctx.send(f"```\n{token}```)
 
     def txtbits_to_image(self, path_txt, width, height):
         with open(path_txt, "r") as f:
