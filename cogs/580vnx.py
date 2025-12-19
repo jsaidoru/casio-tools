@@ -191,7 +191,7 @@ class fx_580VNX(commands.Cog, name=""):
     @fx580vnx.command(name="translatehex", help="Dịch hex sang token")
     async def translatehex(self, hex_string: str):
         token = self.translate_hex(hex_string)
-        await ctx.send(f"```\n{token}```)
+        await ctx.send(f"```\n{token}```")
 
     def txtbits_to_image(self, path_txt, width, height):
         with open(path_txt, "r") as f:
