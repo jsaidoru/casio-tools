@@ -189,7 +189,7 @@ class fx_580VNX(commands.Cog, name=""):
         return " ".join(token)
 
     @fx580vnx.command(name="translatehex", help="Dịch hex sang token")
-    async def translatehex(self, hex_string: str):
+    async def translatehex(self, ctx, *,  hex_string: str):
         token = self.translate_hex(hex_string)
         await ctx.send(f"```\n{token}```")
 
