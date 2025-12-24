@@ -61,14 +61,13 @@ async def on_message_delete(message):
             del deleted_message_logs[message.channel.id]
             
 @bot.command(name="snipe", help="Snipe tin nhắn vừa bị xoá")
-@commands.cooldown(1, 36, commands.BucketType.user)
 async def snipe(ctx):
     snipe_data = sniped_messages.get(ctx.channel.id)
 
     if snipe_data:
         time_diff = int((discord.utils.utcnow() - snipe_data["time"]).total_seconds())
         await ctx.send(
-            f"# Tin nhắn bị xoá bởi **{snipe_data['author']}** ({time_diff} giây trước):\n---\n>>> {snipe_data['content']}"
+            f"# Tin nhắn bị xoá bởi **{snipe_data['author']}** ({time_diff} giây trước):\n---\n>>> {discord.utils.escape_mentions(snipe_data['content'])}"
         )
     else:
         await ctx.send("Làm gì có gì để snipe, bớt ảo tưởng đi má.")
