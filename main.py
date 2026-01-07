@@ -37,6 +37,8 @@ async def on_message(message):
     if channel_id != 1424604740221796483 and message.content.startswith("c!"):
         await message.channel.send("Không dùng bot ngoài <#1424604740221796483> !")
         return
+    
+    await bot.process_commands(message)
 
 sniped_messages = {}
 @bot.event
