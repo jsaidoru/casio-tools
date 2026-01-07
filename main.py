@@ -29,6 +29,15 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send(f"Lệnh gặp sự cố khi chạy: ```\n{str(error)}\n```")
 
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    channel_id = message.channel.id
+    if channel_id != 1424604740221796483:
+        await ctx.send("Không dùng bot ngoài <#1424604740221796483> !")
+        return
+
 sniped_messages = {}
 @bot.event
 async def on_message_delete(message):
@@ -62,7 +71,7 @@ async def on_message_delete(message):
             
 @bot.command(name="snipe", help="Snipe tin nhắn vừa bị xoá")
 async def snipe(ctx):
-    snipe_data = sniped_messages.get(ctx.channel.id)
+    snipe_data = sniped_messages.get(1424366374846726215)
 
     if snipe_data:
         time_diff = int((discord.utils.utcnow() - snipe_data["time"]).total_seconds())
@@ -88,14 +97,14 @@ async def memcount(ctx):
     await ctx.send(f"Server hiện đang có {member_count} thành viên.")
 
 bot.remove_command('help')
-@bot.command(name="help")
+@bot.command(name="help", aliases=["h"])
 async def help(ctx, *, command_name: str = None):
     embed = discord.Embed(color=discord.Color.blurple())
 
     if command_name is None:
         # No args → show all commands grouped by cog
         embed.title = "📘 Help Menu"
-        embed.description = "Sử dụng `c!help lệnh` để có thêm chi tiết về lệnh."
+        embed.description = "Sử dụng `c!help <lệnh>` để có thêm chi tiết về lệnh."
 
         cog_commands = {}
 
