@@ -20,14 +20,14 @@ class fx_580VNX(commands.Cog, name=""):
     async def fx580vnx(self, ctx):
         await ctx.send("Nhóm lệnh cho máy fx-580 VNX. Sử dụng `c!help 580` để xem các lệnh con.")
 
-    @fx580vnx.command(name='display_font', help='Mở file bảng chữ 1 byte và 2 byte.')
+    @fx580vnx.command(name='displayfont', aliases=["dispfont", "df"], help='Mở file bảng chữ 1 byte và 2 byte(tiếng Việt).')
     async def display_font(self, ctx):
         await ctx.send(files=[
             discord.File(fp=font_1byte), 
             discord.File(fp=font_2byte)
             ])
 
-    @fx580vnx.command(name='token_table', help="Mở file bảng token.")
+    @fx580vnx.command(name='tokentable', aliases=["token", "tt"], help="Mở file bảng token.")
     async def _token_table(self, ctx):
         await ctx.send(files=[discord.File(fp=token_table)])
 
@@ -138,12 +138,12 @@ class fx_580VNX(commands.Cog, name=""):
 
         return formatted_result
     
-    @fx580vnx.command(name='hexsplit', help="Tách hex vào các biến A, B, C.")
+    @fx580vnx.command(name='hexsplit', aliases=["split", "hs"], help="Tách hex vào các biến A, B, C.")
     async def hex_split(self, ctx, *, hex_string: str):
         result = self.split_hex(hex_string)
         await ctx.send(f"```\n{result}\n```")
         
-    @fx580vnx.command(name='findguide', help="Tìm tài liệu liên quan đến fx-580VN X")
+    @fx580vnx.command(name='findguide', aliases=["find", "fg"], help="Tìm tài liệu liên quan đến fx-580VN X")
     async def findguide(self, ctx, *, keyword: str):
         found_messages = []
         channel = self.bot.get_channel(1424392041735127080)
