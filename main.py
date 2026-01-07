@@ -35,7 +35,7 @@ async def on_message(message):
         return
     channel_id = message.channel.id
     if channel_id != 1424604740221796483:
-        await message.send("Không dùng bot ngoài <#1424604740221796483> !")
+        await message.channel.send("Không dùng bot ngoài <#1424604740221796483> !")
         return
 
 sniped_messages = {}
