@@ -34,7 +34,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
     channel_id = message.channel.id
-    if channel_id != 1424604740221796483:
+    if channel_id != 1424604740221796483 and message.content.startswith("c!"):
         await message.channel.send("Không dùng bot ngoài <#1424604740221796483> !")
         return
 
