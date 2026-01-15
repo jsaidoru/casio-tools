@@ -175,7 +175,7 @@ class fx_580VNX(commands.Cog, name=""):
     "@", "@", "@", "@", "@", "@", "@", "@", "x̂", "ŷ", "x̂₁", "x̂₂", "@", "@", "@", "@",
     "−", "b", "o", "d", "h", "@", "@", "@", "⌟", "^(", "ˣ√(", "@", "@", "@", "@", "@",
     ")", "▸t", "▸a+b𝒊", "▸r∠𝜃", "⁻¹", "²", "³", "%", "!", "°", "ʳ", "ᵍ", "▫", "𝐄", "𝐏", "𝐓",
-    "E", "𝐆", "𝐌", "𝐤", "𝐦", "𝝁", "𝐧", "𝐩", "𝐟", "@", "▸Simp", "@", "@", "@", "@", "@"
+    "𝐆", "𝐌", "𝐤", "𝐦", "𝝁", "𝐧", "𝐩", "𝐟", "@", "▸Simp", "@", "@", "@", "@", "@"
 ]
         hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", "").upper())
         tokens = []
@@ -188,7 +188,7 @@ class fx_580VNX(commands.Cog, name=""):
                 tokens.append(token)
         return " ".join(tokens)
 
-    @fx580vnx.command(name="translatehex", help="Dịch hex sang token")
+    @fx580vnx.command(name="translatehex", aliases=["translate,", "trans", "th"], help="Dịch hex sang token")
     async def translatehex(self, ctx, *,  hex_string: str):
         token = self.translate_hex(hex_string)
         await ctx.send(f"```\n{token}```")
