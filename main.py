@@ -97,6 +97,21 @@ def get_all_commands(cmd: commands.Command, parent=""):
 async def memcount(ctx):
     member_count = ctx.guild.member_count
     await ctx.send(f"Server hiện đang có {member_count} thành viên.")
+    
+@bot.command(name="avatar", aliases=["av"], help="Lấy avatar của 1 user dựa vào ID")
+async def avatar(ctx, user_id: int):
+    try:
+        user = await bot.fetch_user(user_id)
+        avatar_url = user.display_avatar.url
+        
+        await ctx.send(f"Đã tìm thấy người dùng **{user.name}**\nAvatar URL: {avatar_url}")
+    except discord.NotFound:
+        await ctx.send("Khoong tìm thấy người dùng với ID đã cho.")
+    except discord.HTTPException:
+        await ctx.send("Đã xảy ra lỗi khi lấy avatar.")
+    except ValueError:
+        await ctx.send("ID không hợp lệ. Vui lòng chỉ sử dụng số.")
+
 
 bot.remove_command('help')
 @bot.command(name="help", aliases=["h"])
