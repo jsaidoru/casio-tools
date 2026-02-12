@@ -106,7 +106,7 @@ async def avatar(ctx, user_id: int):
         
         await ctx.send(f"Đã tìm thấy người dùng **{user.name}**\nAvatar URL: {avatar_url}")
     except discord.NotFound:
-        await ctx.send("Khoong tìm thấy người dùng với ID đã cho.")
+        await ctx.send("Không tìm thấy người dùng với ID đã cho.")
     except discord.HTTPException:
         await ctx.send("Đã xảy ra lỗi khi lấy avatar.")
     except ValueError:
