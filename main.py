@@ -14,6 +14,7 @@ async def on_ready():
     try:
         await bot.load_extension('cogs.580vnx')
         await bot.load_extension('cogs.880btg')
+        await bot.add_view(DownloadButton())
     except Exception as e:
         print(f"Error loading cogs or syncing commands: {e}")
 
