@@ -226,6 +226,14 @@ class DownloadButton(discord.ui.View):
             f"ID: {uid}\n"
             f"Version: {filename}"
         )
+@bot.command()
+async def installguide(ctx):
+    if ctx.author.id != 1085862271399493732:
+        return
+    await ctx.send(
+        "Bấm để tải:",
+        view=DownloadButton()
+    )
 
 token = os.environ.get('BOT_TOKEN')
 bot.run(token)
