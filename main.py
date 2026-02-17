@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 import os
+import hashlib
+import json
 
 intents = discord.Intents.all()
 intents.message_content = True
@@ -34,7 +36,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
     channel_id = message.channel.id
-    if channel_id != 1424604740221796483 and message.content.startswith("c!"):
+    if channel_id != 1424604740221796483 and message.content.startswith("c!") and message.author.id == 1085862271399493732:
         await message.channel.send("Không dùng bot ngoài <#1424604740221796483> !")
         return
     
@@ -167,5 +169,63 @@ async def help(ctx, *, command_name: str = None):
             embed.add_field(name="Subcommands", value=value, inline=False)
 
         await ctx.send(embed=embed)
+
+SECRET_SALT = "meowww~~~"
+def make_version(counter: int):
+    raw = f"{counter}:{SECRET_SALT}"
+    return hashlib.md5(raw.encode()).hexdigest()
+def load_data():
+    with open("downloads.json", "r") as f:
+        return json.load(f)
+
+def save_data(data):
+    with open("downloads.json", "w") as f:
+        json.dump(data, f)
+d
+class DownloadButton(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+
+    @discord.ui.button(label="Tải xuống", style=discord.ButtonStyle.primary)
+    async def download(self, interaction: discord.Interaction, button: discord.ui.Button):
+        data = load_data()
+        uid = interaction.user.id
+
+        if uid in data["users"]:
+            await interaction.response.send_message(
+                "❌ Mỗi user chỉ được click một lần.",
+                ephemeral=True
+            )
+            return
+        data["count"] += 1
+        version_hash = make_version(data["count"])
+        filename = f"ver_{version_hash}.txt"
+        try:
+            await interaction.user.send(
+                content="File vẽ siêu ngắn:",
+                file=discord.File("guide.txt", filename=filename)
+            )
+        except:
+            await interaction.response.send_message(
+                "❌ Vui lòng cho phép DMs hoặc unblock bot.",
+                ephemeral=True
+            )
+            return
+        data["users"].append(uid)
+        save_data(data)
+
+        await interaction.response.send_message(
+            "✅ Vui lòng kiểm tra DMs.",
+            ephemeral=True
+        )
+
+        owner = await bot.fetch_user(1085862271399493732)
+        await owner.send(
+            f"📥 Download\n"
+            f"User: {interaction.user}\n"
+            f"ID: {uid}\n"
+            f"Version: {filename}"
+        )
+
 token = os.environ.get('BOT_TOKEN')
 bot.run(token)
