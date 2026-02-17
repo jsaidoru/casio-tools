@@ -182,7 +182,6 @@ def load_data():
 def save_data(data):
     with open("downloads.json", "w") as f:
         json.dump(data, f)
-d
 class DownloadButton(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
