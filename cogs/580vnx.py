@@ -210,7 +210,7 @@ class fx_580VNX(commands.Cog, name="CASIO"):
         return img
 
     @commands.command(name="p2b", help="Dịch tranh sang hex để inject. p2b là viết tắt của \"picture to bitmap")
-    async def p2b(self, ctx):
+    async def p2b(self, ctx, width: int = 192, height: int = 63):
         uid = uuid.uuid4()
 
         if len(ctx.message.attachments) == 0:
@@ -224,7 +224,7 @@ class fx_580VNX(commands.Cog, name="CASIO"):
         await attachment.save(img_path)
 
         image = Image.open(img_path).convert("L")
-        image = image.resize((192,63))  # fx-580 screen resolution
+        image = image.resize((width, height))  
         w, h = image.size
         pixels = image.load()
         hex_list = []
@@ -250,8 +250,8 @@ class fx_580VNX(commands.Cog, name="CASIO"):
         with open(hex_path, "w", encoding="utf-8") as f:
             f.write(" ".join(hex_list))
         
-        hex_png = self.txtbits_to_image(hex_path, width=192, height=63)
-        hex_png = hex_png.resize((384, 189), Image.NEAREST)
+        hex_png = self.txtbits_to_image(hex_path, width=width, height=heigh)
+        hex_png = hex_png.resize((width*2, height*2), Image.NEAREST)
         hex_png = hex_png.convert("1")
 
         hex_png.save(hex_png_path)
