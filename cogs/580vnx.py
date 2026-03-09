@@ -250,7 +250,7 @@ class fx_580VNX(commands.Cog, name="CASIO"):
         with open(hex_path, "w", encoding="utf-8") as f:
             f.write(" ".join(hex_list))
         
-        hex_png = self.txtbits_to_image(hex_path, width=width, height=heigh)
+        hex_png = self.txtbits_to_image(hex_path, width=width, height=height)
         hex_png = hex_png.resize((width*2, height*2), Image.NEAREST)
         hex_png = hex_png.convert("1")
 
