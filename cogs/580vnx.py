@@ -172,6 +172,9 @@ class fx_580VNX(commands.Cog, name="CASIO"):
     ")", "▸t", "▸a+b𝒊", "▸r∠𝜃", "⁻¹", "²", "³", "%", "!", "°", "ʳ", "ᵍ", "▫", "𝐄", "𝐏", "𝐓",
     "𝐆", "𝐌", "𝐤", "𝐦", "𝝁", "𝐧", "𝐩", "𝐟", "@", "▸Simp", "@", "@", "@", "@", "@"
 ]
+        fe_table = ["<FE00>", "in▸cm"	"cm▸in"	"ft▸m"	"m▸ft"	"yd▸m"	"m▸yd"	"mile▸km"	"km▸mile"	"n mile▸m"	"m▸n mile"	"acre▸m²"	"m²▸acre"	"gal(US)▸L"	"L▸gal(US)"	"gal(UK)▸L"
+"L▸gal(UK)"	"pc▸km"	"km▸pc"	"m/s▸km/h"	"km/h▸m/s"	"oz▸g"	"g▸oz"	"lb▸kg"	"kg▸lb"	"atm▸Pa"	"Pa▸atm"	"mmHg▸Pa"	"Pa▸mmHg"	"hp▸kW"	"kW▸hp"	"kgf/cm²▸Pa"
+"Pa▸kgf/cm²"	"kgf⋅m▸J"	"J▸kgf⋅m"	"lbf/in²▸kPa"	"kPa▸lbf/in²"	"°C▸°F"	"°F▸°C"	"cal▸J"	"J▸cal"]
         hex_bytes = self.split_bytes(hex_string.replace(" ", "").replace("\n", "").upper())
         tokens = []
         for byte in hex_bytes:
