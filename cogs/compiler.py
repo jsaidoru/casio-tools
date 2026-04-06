@@ -4,7 +4,7 @@ import subprocess
 import os
 import uuid
 
-COMPILER_PATH = "fxesplus/580vnx_emu/compiler.py"
+COMPILER_PATH = Path(__file__).resolve().parent / "fxesplus" / "580vnx_emu" / "compiler.py"
 class Compiler(commands.Cog, name="Compiler"):
     def __init__(self, bot):
         self.bot = bot
@@ -43,7 +43,7 @@ class Compiler(commands.Cog, name="Compiler"):
                 pass
             return f"❌ Exception: `{e}`"
 
-    @commands.command(name="comp")
+    @commands.command(name="comp", help="Compiler cho fx-580VN X")
     async def compile(self, ctx, *, text: str):
         text = text.replace("`", "")
         code = self.extract_code(text)
