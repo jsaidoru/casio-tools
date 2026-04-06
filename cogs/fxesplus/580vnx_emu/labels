@@ -1,4 +1,4 @@
-09C20	    cmp_ea
+09C20	  cmp_ea
 0E5C8		strcpy
 2EDA0		strcat
 26FFA		memcpy
