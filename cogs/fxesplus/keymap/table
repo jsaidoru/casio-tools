@@ -1,0 +1,24 @@
+<>    STAT  CMPLX BASE      MATRIX VECTOR CONST CONV
+CLR   hyp   DRG▶  '         '      '      RCL-A RCL-B 
+RCL-C RCL-D RCL-E RCL-F     RCL-X  RCL-Y  RCL-M STO-A 
+STO-B STO-C STO-D STO-E     STO-F  STO-X  STO-Y STO-M 
+
+'    '    '      '   '   % ' '  (   ) ' + ,   -       .   '   
+0    1    2      3   4   5 6 7  8   9 : ' '   ALPHA-= '   '   
+'    A    B      C   D   E F '  '   ' ' ' '   '       ×   ÷   
+'    '    '      '   M   ' ' x! X   Y ' ' '   '       '   '   
+(-)  '    '      '   '   ' ' '  log ' ' ' Pol Rec     '   '   
+'    '    '      '   x10 ' ' '  '   ' ' ' '   '       '   '   
+'    e    π      '   '   ' ' '  '   ' ' ' Ans Ran#    '   '   
+'    '    '      '   '   ' ' '  '   ' ' ' '   '       '   '   
+sin  cos  tan    ln  '   ' ' '  '   ' ' ' '   '       '   '   
+sin¯ cos¯ tan¯   Rnd '   ' ' '  '   ' ' ' '   '       nPr nCr 
+'    '    RanInt '   '   ' ' '  '   ' ' ' '   '       '   '   
+
+▀/□   ■+□/□ x▀    √■        x¯¹    x²     x³    ³√■   
+▀√□   e▀    10▀   log▄□     Abs    ∫      d/dx■ Σ     
+▲     ▼     ▶     ◀         MODE   SETUP  AC    '     
+'     '     '     '         '      =      M+    M-    
+'     '     '     '         '      '      ▫'"   ▫'"←  
+ENG   ENG←  S↔D   a+b/c↔d/c CALC   SOLVE  DEL   '     
+
