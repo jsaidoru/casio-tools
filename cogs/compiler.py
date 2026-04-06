@@ -3,6 +3,7 @@ from discord.ext import commands
 import subprocess
 import os
 import uuid
+from pathlib import Path
 
 COMPILER_PATH = Path(__file__).resolve().parent / "fxesplus" / "580vnx_emu" / "compiler.py"
 class Compiler(commands.Cog, name="Compiler"):
