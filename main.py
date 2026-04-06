@@ -13,7 +13,7 @@ async def on_ready():
     print(f'Bot is ready. Logged in as {bot.user}')
     try:
         await bot.load_extension('cogs.580vnx')
-        await bot.load_extension('cogs.880btg')
+        await bot.load_extension('cogs.compiler')
         await bot.add_view(DownloadButton())
     except Exception as e:
         print(f"Error loading cogs or syncing commands: {e}")
@@ -170,103 +170,6 @@ async def help(ctx, *, command_name: str = None):
             embed.add_field(name="Subcommands", value=value, inline=False)
 
         await ctx.send(embed=embed)
-
-SECRET_SALT = os.environ.get("SECRET_SALT")
-def make_version(counter: int):
-    raw = f"{counter}:{SECRET_SALT}"
-    return hashlib.md5(raw.encode()).hexdigest()
-def load_data():
-    with open("downloads.json", "r") as f:
-        return json.load(f)
-
-def save_data(data):
-    with open("downloads.json", "w") as f:
-        json.dump(data, f)
-def read_txt(path):
-    with open(path, "r", encoding="utf-8") as f:
-        return f.readlines()
-def get_middle_index(lines):
-    return len(lines) // 2
-def insert_payload_into_line(line, payload):
-    line = line.rstrip("\n")
-
-    pos = line.find(" ")
-    if pos == -1:
-        pos = len(line) // 2
-
-    return line[:pos] + payload + line[pos:] + "\n"
-def embed_payload(lines, payload):
-    mid = get_middle_index(lines)
-    lines[mid] = insert_payload_into_line(lines[mid], payload)
-    return lines
-def write_txt(path, lines):
-    with open(path, "w", encoding="utf-8") as f:
-        f.writelines(lines)
-ZW0 = "\u200b"  # bit 0
-ZW1 = "\u200c"  # bit 1
-
-def hash_to_zw(hash_hex):
-    bits = bin(int(hash_hex, 16))[2:].zfill(len(hash_hex) * 4)
-    return "".join(ZW1 if b == "1" else ZW0 for b in bits)
-
-class DownloadButton(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-
-    @discord.ui.button(label="Tải xuống", style=discord.ButtonStyle.primary)
-    async def download(self, interaction: discord.Interaction, button: discord.ui.Button):
-        data = load_data()
-        uid = interaction.user.id
-
-        if uid in data["users"]:
-            await interaction.response.send_message(
-                "❌ Mỗi user chỉ được click một lần.",
-                ephemeral=True
-            )
-            return
-        data["count"] += 1
-        version_hash = make_version(data["count"])
-        payload = hash_to_zw(version_hash)
-        lines = read_txt("guide.txt")
-        lines = embed_payload(lines, payload)
-        write_txt(f"/tmp/ver_{version_hash}.txt", lines)
-        filename = f"ver_{version_hash}.txt"
-        file_path = f"/tmp/{filename}"
-        try:
-            await interaction.user.send(
-                content="File vẽ siêu ngắn:",
-                file=discord.File(file_path, filename=filename)
-            )
-        except:
-            await interaction.response.send_message(
-                "❌ Vui lòng cho phép DMs hoặc unblock bot.",
-                ephemeral=True
-            )
-            return
-        data["users"].append(uid)
-        save_data(data)
-
-        await interaction.response.send_message(
-            "✅ Vui lòng kiểm tra DMs.",
-            ephemeral=True
-        )
-
-        owner = await bot.fetch_user(1085862271399493732)
-        await owner.send(
-            f"📥 Download\n"
-            f"User: {interaction.user}\n"
-            f"ID: {uid}\n"
-            f"Version: {filename}"
-        )
-        os.remove(file_path)
-@bot.command()
-async def installguide(ctx):
-    if ctx.author.id != 1085862271399493732:
-        return
-    await ctx.send(
-        "Bấm để tải:",
-        view=DownloadButton()
-    )
 
 token = os.environ.get('BOT_TOKEN')
 bot.run(token)
