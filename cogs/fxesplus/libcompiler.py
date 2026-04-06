@@ -514,7 +514,7 @@ def process_program(args, program, overflow_initial_sp):
 		print('Address to load: %s %s'%(byte_to_key((home - home2) & 255), byte_to_key((home - home2) >> 8)))
 		for i in range(home2):
 			result.insert(0, 0)
-		import cogs.fxesplus.keypairs as keypairs
+		import keypairs as keypairs
 		print(keypairs.format(result))
 	elif args.target == 'overflow' and args.format == 'key':
 		print(' '.join(byte_to_key(x) for x in hackstring))
