@@ -87,8 +87,9 @@ class fx_580VNX(commands.Cog, name="CASIO"):
                 enterable.append(byte[2:])
             else:
                 enterable.append(byte)
+        assign_hexs = f"Các bytes cần nhập ({len(enterable)}): {', '.join(enterable)}."
         if len(enterable) >= 21:
-            return "Quá nhiều byte để nhập vào 3 biến(tối đa 21 byte)"
+            return "Quá nhiều byte để nhập vào 3 biến(tối đa 21 byte)\n\n" + assign_hexs
 
         A, B, C = "A=1.0000", "B=1.", "C=1."
         vars_list = [A, B, C]
@@ -131,7 +132,7 @@ class fx_580VNX(commands.Cog, name="CASIO"):
         else:
             formatted_result = ""
 
-        return formatted_result
+        return formatted_result + f"\n\n{assign_hexs}"
     
     @commands.command(name='hexsplit', aliases=["split", "hs"], help="Tách hex vào các biến A, B, C.")
     async def hex_split(self, ctx, *, hex_string: str):
