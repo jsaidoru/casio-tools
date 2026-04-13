@@ -1,4 +1,4 @@
-import libcompiler as libcompiler
+import cogs.fxesplus.libcompiler as libcompiler
 
 from collections import defaultdict
 

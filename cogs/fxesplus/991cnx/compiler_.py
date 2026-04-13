@@ -2,8 +2,8 @@
 import sys,os,itertools
 os.chdir(os.path.dirname(__file__))
 sys.path.append('..')
-import libcompiler as libcompiler
-from libcompiler import (
+import cogs.fxesplus.libcompiler as libcompiler
+from cogs.fxesplus.libcompiler import (
 		set_font, set_npress_array, get_disassembly, get_commands,
 		read_rename_list, set_symbolrepr, get_rom,
 		optimize_gadget, find_equivalent_addresses,
@@ -11,10 +11,10 @@ from libcompiler import (
 		process_program
 		)
 
-get_rom('rom.bin')
-get_disassembly('disas.txt')
+#get_rom('rom.bin')
+#get_disassembly('disas.txt')
 get_commands('gadgets')
-read_rename_list('labels')
+#read_rename_list('labels')
 read_rename_list('../labels_sfr')
 
 FONT=[l.split('\t') for l in '''

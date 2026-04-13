@@ -2,8 +2,8 @@
 import sys,os,itertools
 os.chdir(os.path.dirname(__file__))
 sys.path.append('..')
-import libcompiler as libcompiler
-from libcompiler import (
+import cogs.fxesplus.libcompiler as libcompiler
+from cogs.fxesplus.libcompiler import (
 		set_font, set_npress_array, get_disassembly, get_commands,
 		read_rename_list, set_symbolrepr, get_rom,
 		optimize_gadget, find_equivalent_addresses,
@@ -47,11 +47,11 @@ npress=( # 99: nul, 49: not typeable, 24: can be extracted from multibyte charac
 	24,24,24,24,24,24,24,24,24,30,24,24,24,24,24,24,
 	24,2 ,2 ,2 ,24,24,24,24,24,24,24,24,2 ,1 ,1 ,24,
 	1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,24,24,24,24,24,24,
-	2 ,1 ,2 ,2 ,2 ,2 ,2 ,2 ,1 ,2 ,2 ,2 ,24,24,24,24,
-	2 ,1 ,2 ,2 ,24,24,24,24,24,24,24,24,24,24,24,49,
+	2 ,1 ,2 ,2 ,2 ,2 ,2 ,2 ,1 ,2 ,24,24,24,24,24,24,
+	2 ,1 ,2 ,24,24,24,24,24,24,24,24,24,24,24,24,49,
 	1 ,49,49,49,49,49,49,49,2 ,2 ,49,49,3 ,3 ,3 ,3 ,
 	3 ,3 ,2 ,2 ,1 ,1 ,2 ,1 ,1 ,1 ,2 ,2 ,2 ,1 ,2 ,2 ,
-	49,49,49,2 ,2 ,49,49,2 ,2 ,2 ,49,49,49,49,49,49,
+	49,49,49,49,49,49,49,2 ,49,49,49,49,49,49,49,49,
 	49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,
 	49,49,49,49,49,2 ,1 ,1 ,1 ,1 ,2 ,49,49,2 ,2 ,49,
 	49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,
@@ -68,7 +68,13 @@ def get_binary(filename):
 	file.close()
 	return result
 
+# TODO iterator workaround until get_char_table is implemented for this calculator
+os.chdir("../580vnx/")
+sys.path.append(".")
 from get_char_table import f as get_symbol
+assert sys.path[-1]=="."
+sys.path.pop()
+os.chdir("../991cnx_emu/")
 symbols = [
 		''.join(map(FONT.__getitem__,get_symbol(x)[1]))
 			for x in range(0xf0)] + \

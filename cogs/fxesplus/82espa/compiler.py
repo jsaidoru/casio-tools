@@ -2,7 +2,7 @@
 import sys,os
 os.chdir(os.path.dirname(__file__))
 sys.path.append('..')
-from libcompiler import (
+from cogs.fxesplus.libcompiler import (
 		set_font, set_npress_array, get_disassembly, get_commands,
 		read_rename_list, set_symbolrepr,
 		to_font,
