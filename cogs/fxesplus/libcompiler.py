@@ -187,7 +187,7 @@ def get_disassembly(filename="disas.txt"):
 		match = line_regex.match(line)  # match prefix
 		if match:
 			addr = int(match[1], 16)
-			mnemonic = match[3]
+			mnemonic = ' '.join(match[3].lower().split())
 			while addr >= len(disasm): 
 				disasm.append('')
 			disasm[addr] = mnemonic
