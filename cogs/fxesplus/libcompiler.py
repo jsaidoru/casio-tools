@@ -40,8 +40,10 @@ def byte_to_key(byte):
 		offset+=1
 	typesym=symbolrepr[byte] if byte else 'NUL'
 
-	if set(sym)&set('\'"<>:'): sym=repr(sym)
-	if set(typesym)&set('\'"<>:+'): typesym=repr(typesym)
+	if set(sym)&set('\'"<>:'): 
+		sym=repr(sym)
+	if set(typesym)&set('\'"<>:+'): 
+		typesym=repr(typesym)
 
 	if offset==0:
 		return sym
@@ -50,11 +52,13 @@ def byte_to_key(byte):
 
 
 def get_npress(charcodes):
-	if isinstance(charcodes, int): charcodes = (charcodes,)
+	if isinstance(charcodes, int): 
+		charcodes = (charcodes,)
 	return sum(npress[charcode] for charcode in charcodes)
 
 def get_npress_adr(adrs):
-	if isinstance(adrs, int): adrs = (adrs,)
+	if isinstance(adrs, int): 
+		adrs = (adrs,)
 	assert all(0 <= adr <= max_call_adr for adr in adrs)
 	return sum(get_npress((adr&0xFF,(adr>>8)&0xFF)) for adr in adrs)
 
@@ -142,7 +146,8 @@ def get_commands(filename):
 			continue
 
 		line = del_inline_comment(line)
-		if not line: continue
+		if not line: 
+			continue
 
 		match = line_regex.fullmatch(line)
 		address, command = match[1], match[2]
@@ -154,7 +159,7 @@ def get_commands(filename):
 			i = command.find('}')
 			if i < 0:
 				raise Exception(f'Line {line_index0+1} '
-					'has unmatched "{"');
+					'has unmatched "{"')
 			tags.append(command[1:i])
 			command = command[i+1:]
 
@@ -165,24 +170,25 @@ def get_commands(filename):
 
 		add_command(commands, address, command, tags, f'at {filename}:{line_index0+1}')
 
-def get_disassembly(filename):
+def get_disassembly(filename="disas.txt"):
 	'''Try to parse a disassembly file with annotated address.
 
 	Each line should look like this:
 
-		mov r2, 1                      ; 0A0A2 | 0201
+		009C20   52 92              L       ER2, [EA+]
 	'''
 	global disasm
 	with open(filename, 'r', encoding='u8') as f:
 		data = f.read().splitlines()
 
-	line_regex = re.compile(r'\t(.*?)\s*; ([0-9a-fA-F]*) \|')
+	line_regex = re.compile(r'^\s*([0-9A-Fa-f]+)\s+((?:[0-9A-Fa-f]{2}\s+)+)\s+(.*)$')
 	disasm = []
 	for line in data:
 		match = line_regex.match(line)  # match prefix
 		if match:
 			addr = int(match[2], 16)
-			while addr >= len(disasm): disasm.append('')
+			while addr >= len(disasm): 
+				disasm.append('')
 			disasm[addr] = match[1]
 
 def read_rename_list(filename):
@@ -203,7 +209,8 @@ def read_rename_list(filename):
 	last_global_label = None
 	for line_index0, line in enumerate(data):
 		match = line_regex.match(line)
-		if not match: continue
+		if not match: 
+			continue
 		raw, real = match[1], match[2]
 		if real.startswith('.'):
 			# we don't get local labels.
@@ -247,7 +254,8 @@ def read_rename_list(filename):
 			else:
 				tags = 'rt',
 				a1 = addr + 2
-				while not any(disasm[a1].startswith(x) for x in ('push lr', 'pop pc', 'rt')): a1 += 2
+				while not any(disasm[a1].startswith(x) for x in ('push lr', 'pop pc', 'rt')): 
+					a1 += 2
 				if not disasm[a1].startswith('rt'):
 					tags = tags + ('del lr',)
 
@@ -286,7 +294,8 @@ def process(line):
 		''' Compound statement. Syntax:
 		`<statement1> ; <statement2> ; ...`
 		'''
-		for command in line.split(';'): process(command)
+		for command in line.split(';'): 
+			process(command)
 
 	elif line[-1] == ':':
 		''' Syntax: `<label>:`
@@ -299,7 +308,7 @@ def process(line):
 
 	elif line.startswith('0x'):
 		''' Syntax: `0x<hexadecimal digits>` '''
-		assert len(line)%2==0, f'Invalid data length'
+		assert len(line)%2==0, 'Invalid data length'
 		n_byte = len(line)//2-1
 		data = int(line, 16)
 		for _ in range(n_byte):
@@ -307,7 +316,7 @@ def process(line):
 			data>>=8
 	elif line.startswith('hex') and 'hex_' not in line:
 		data = line[3:].strip()
-		assert len(data.replace(" ", "")) % 2 == 0, f'Invalid data length'
+		assert len(data.replace(" ", "")) % 2 == 0, 'Invalid data length'
 		data_bytes = bytes.fromhex(data)
 		result.extend(data_bytes)
 
@@ -396,7 +405,7 @@ def process(line):
 		home = home1
 
 	else:
-		assert False, f'Unrecognized command'
+		assert False, 'Unrecognized command'
 
 def process_program(args, program, overflow_initial_sp):
 	'''
@@ -443,7 +452,7 @@ def process_program(args, program, overflow_initial_sp):
 		if args.target == 'overflow':
 			assert len(result) <= 100, 'Program too long'
 
-		if home == None: # `org` is not used
+		if home is None: # `org` is not used
 			# compute value of `home`
 			home = overflow_initial_sp
 			if 'home' in labels:
@@ -453,8 +462,10 @@ def process_program(args, program, overflow_initial_sp):
 						f' > {0x8E00-home} bytes\n')
 
 			min_home = home
-			while min_home >= 0x8154+200: min_home -= 100
-			while home + len(result) <= 0x8E00: home += 100 # 0x8E00: end of RAM
+			while min_home >= 0x8154+200: 
+				min_home -= 100
+			while home + len(result) <= 0x8E00: 
+				home += 100 # 0x8E00: end of RAM
 			home = min(range(min_home, home, 100), key=lambda home:
 				(
 					sum( # count number of ... satisfy condition
@@ -465,7 +476,7 @@ def process_program(args, program, overflow_initial_sp):
 			)
 
 	elif args.target == 'loader':
-		if home == None:
+		if home is None:
 			home = 0x85b0 - len(result)
 			entry = home + labels.get('home', 0) - 2
 			result.extend((0x6a, 0x4f, 0, 0, entry & 255, entry >> 8, 0x68, 0x4f, 0, 0))
@@ -541,7 +552,8 @@ def find_equivalent_addresses(rom:bytes,q:set):
 	for i in range(0,len(rom),2): # BC AL
 		if rom[i+1]==0xce:
 			offset=rom[i]
-			if offset>=128:offset-=256
+			if offset>=128:
+				offset-=256
 			comefrom[i>>16 | ((i+(offset+1)*2)&0xffff)].append(i)
 
 	for i in range(0,len(rom)-2,2): # B

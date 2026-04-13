@@ -1,7 +1,10 @@
 #!/usr/bin/python3
-import sys,os,itertools
+import sys
+import os
+import itertools
 os.chdir(os.path.dirname(__file__))
 sys.path.append('..')
+import libcompiler
 from libcompiler import (
 		set_font, set_npress_array, get_disassembly, get_commands,
 		read_rename_list, set_symbolrepr, get_rom,
@@ -96,7 +99,7 @@ parser.add_argument('-p', '--preview-count', default=0,
 		type=lambda x:int(x,0), help='Number of lines to preview (optimize gadget mode)')
 args = parser.parse_args()
 
-if args.gadget_bin!=None:
+if args.gadget_bin is not None:
 	assert args.gadget_bin
 	print_addresses(optimize_gadget(bytes.fromhex(args.gadget_bin)), args.preview_count)
 
@@ -105,7 +108,7 @@ elif args.gadget_nword>0:
 		optimize_gadget(libcompiler.rom[args.gadget_adr:args.gadget_adr+args.gadget_nword*2]),
 		args.preview_count)
 
-elif args.gadget_adr!=None:
+elif args.gadget_adr is not None:
 	print_addresses(
 		find_equivalent_addresses(libcompiler.rom,{args.gadget_adr}),
 		args.preview_count)
