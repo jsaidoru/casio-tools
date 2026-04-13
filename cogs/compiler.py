@@ -5,7 +5,8 @@ import os
 import uuid
 from pathlib import Path
 
-COMPILER_PATH = Path(__file__).resolve().parent / "fxesplus" / "580vnx_emu" / "compiler.py"
+ROOT = Path(__file__).resolve().parents[1]
+COMPILER_PATH = ROOT / "resources" / "fxesplus" / "580vnx_emu" / "compiler.py"
 class Compiler(commands.Cog, name="Compiler"):
     def __init__(self, bot):
         self.bot = bot
