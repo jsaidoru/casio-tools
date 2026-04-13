@@ -186,10 +186,11 @@ def get_disassembly(filename="disas.txt"):
 	for line in data:
 		match = line_regex.match(line)  # match prefix
 		if match:
-			addr = int(match[2], 16)
+			addr = int(match[1], 16)
+			mnemonic = match[3]
 			while addr >= len(disasm): 
 				disasm.append('')
-			disasm[addr] = match[1]
+			disasm[addr] = mnemonic
 
 def read_rename_list(filename):
 	'''Try to parse a rename list.
