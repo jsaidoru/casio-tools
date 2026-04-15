@@ -4,8 +4,8 @@ import os
 import itertools
 os.chdir(os.path.dirname(__file__))
 sys.path.append('..')
-import cogs.fxesplus.libcompiler as libcompiler
-from cogs.fxesplus.libcompiler import (
+import libcompiler
+from libcompiler import (
 		set_font, set_npress_array, get_disassembly, get_commands,
 		read_rename_list, set_symbolrepr, get_rom,
 		optimize_gadget, find_equivalent_addresses,
