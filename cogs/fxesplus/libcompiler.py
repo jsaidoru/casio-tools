@@ -283,10 +283,10 @@ adr_of_cmds = [] # list of (source adr, offset, target label)
 # Right after the buffer overflow, the memory region [home..home+len(result)[
 # should have value = result (after replacing labels)
 home = None
-
+string_vars = {}
 def process(line):
 	# the processing result will affect those variables
-	global result, labels, adr_of_cmds, home
+	global result, labels, adr_of_cmds, home, string_vars
 
 	if not line: # empty line
 		pass
@@ -404,7 +404,85 @@ def process(line):
 		home1 = hx - len(result)
 		assert home is None or home == home1, 'Inconsistent value of `home`'
 		home = home1
+	elif line.startswith('str'):
+		''' Syntax:
+        - str <var> "<string>" :        store the hex value of the string into the variable <var> -> Define and store string in variable
+        - str <var>           :        Use(get value) of <var> [requires declaring string of var before calling] -> Use previously defined string variable
+        - str "<string>"       :        Get the hex value of a <string> directly (without using a variable, or reusing it) -> Direct string usage
+        + char "~" is converted into space
+        + support for 580vnx
+        '''
+		content = line[3:].strip()
+		
+		def string_to_bytes(text):
+			byte_list = []
+			print("Processing:", text.replace('~', ' '))
+			for c in text:
+				try:
+					char_to_hex = dict(zip(
+						'''0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁáÀàẢảÃãẠạĂăẮắẰằẲẳẴẵẶặÂâẤấẦầẨẩẪẫẬậÉéÈèẺẻẼẽẸẹÊêẾếỀềỂểỄễỆệÍíÌìỈỉĨĩỊịÓóÒòỎỏÕõỌọÔôỐốỒồỔổỖỗỘộƠơỚớỜờỞởỠỡỢợÚúÙùỦủŨũỤụƯưỨứỪừỬửỮữỰựÝýỲỳỶỷỸỹỴỵĐđ~@_&-+()/*':!?|√÷×^°{}[]%.,''',
+						[
+							'30', '31', '32', '33', '34', '35', '36', '37', '38', '39',
+							'41', '42', '43', '44', '45', '46', '47', '48', '49', '4A',
+							'4B', '4C', '4D', '4E', '4F', '50', '51', '52', '53', '54',
+							'55', '56', '57', '58', '59', '5A', '61', '62', '63', '64',
+							'65', '66', '67', '68', '69', '6A', '6B', '6C', '6D', '6E',
+							'6F', '70', '71', '72', '73', '74', '75', '76', '77', '78',
+							'79', '7A', 'F451', 'F471', 'F450', 'F470', 'F454', 'F474',
+							'F453', 'F473', 'F410', 'F465', 'F455', 'F475', 'F411', 'F431',
+							'F412', 'F432', 'F490', 'F456', 'F491', 'F457', 'F413', 'F433',
+							'F452', 'F472', 'F414', 'F434', 'F415', 'F435', 'F416', 'F436',
+							'F492', 'F477', 'F417', 'F437', 'F459', 'F479', 'F458', 'F478',
+							'F45B', 'F47B', 'F418', 'F438', 'F419', 'F439', 'F45A', 'F47A',
+							'F41A', 'F43A', 'F41B', 'F43B', 'F41C', 'F43C', 'F41D', 'F43D',
+							'F41E', 'F43E', 'F45D', 'F47D', 'F45C', 'F47C', 'F42B', 'F47F',
+							'F45E', 'F47E', 'F428', 'F448', 'F463', 'F483', 'F462', 'F482',
+							'F429', 'F486', 'F430', 'F485', 'F42A', 'F487', 'F464', 'F484',
+							'F41F', 'F43F', 'F420', 'F440', 'F421', 'F441', 'F422', 'F442',
+							'F423', 'F445', 'F444', 'F44D', 'F425', 'F44E', 'F426', 'F446',
+							'F427', 'F447', 'F443', 'F46E', 'F424', 'F48E', 'F46A', 'F48A',
+							'F469', 'F489', 'F42C', 'F48C', 'F42D', 'F48B', 'F42E', 'F488',
+							'F44F', 'F46F', 'F44A', 'F461', 'F44B', 'F467', 'F44C', 'F468',
+							'F48F', 'F476', 'F449', 'F481', 'F46D', 'F48D', 'F42F', 'F45F',
+							'F493', 'F466', 'F494', 'F46B', 'F495', 'F46C', 'F460', 'F480',
+							'20', '40', '5F', '1A', '2D', '2B', '28', '29', '2F',
+							'2A', '27', '3A', '21', '3F', '7C', '98', '26',
+							'24', '5E', '85', '7B', '7D', '5B', '5D', '25',
+							'2E', '2C'
+    					]
+))
+					hex_val = char_to_hex[c]
+					if len(hex_val) == 2:
+						byte_list.append(int(hex_val, 16))
+					elif len(hex_val) == 4:
+						byte_list.extend([int(hex_val[:2], 16), int(hex_val[2:], 16)])
+				except KeyError:
+					raise ValueError(f"Character '{c}' not found in conversion table")
+			return byte_list
 
+		if '"' in content:
+			quote_pos = content.find('"')
+			var_name = content[:quote_pos].strip() if quote_pos > 0 else None
+			text = content[quote_pos+1:].rstrip('"')
+
+			if var_name:
+				string_vars[var_name] = text
+			else:
+				bytes_list = string_to_bytes(text)
+				#print("Final bytes to add:", bytes_list)  # Debug print
+				result.extend(bytes_list)
+
+		elif content:
+			var_name = content.strip()
+			if var_name in string_vars:
+				text = string_vars[var_name]
+				bytes_list = string_to_bytes(text)
+				#print("Final bytes to add:", bytes_list)  # Debug print
+				result.extend(bytes_list)
+			else:
+				raise ValueError(f"Undefined string variable: {var_name}")
+		else:
+			raise ValueError("Invalid str command syntax")
 	else:
 		assert False, 'Unrecognized command'
 
