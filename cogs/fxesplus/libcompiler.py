@@ -416,7 +416,7 @@ def process(line):
 		
 		def string_to_bytes(text):
 			byte_list = []
-			print("Processing:", text.replace('~', ' '))
+			print("Processing string:", text.replace('~', ' '))
 			for c in text:
 				try:
 					char_to_hex = dict(zip(
