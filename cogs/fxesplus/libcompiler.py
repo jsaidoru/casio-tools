@@ -400,7 +400,7 @@ def process(line):
 		Specify the address of this location after mapping.
 		Only use this for loader mode.
 		'''
-		hx = eval(line[3:])
+		hx = int(line[3:], 16)
 		home1 = hx - len(result)
 		assert home is None or home == home1, 'Inconsistent value of `home`'
 		home = home1
