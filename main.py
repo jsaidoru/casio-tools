@@ -6,8 +6,9 @@ import json
 
 intents = discord.Intents.all()
 intents.message_content = True
+allowed_mentions = discord.AllowedMentions(everyone=False, here=False)
 
-bot = commands.Bot(command_prefix="c!", intents=intents)
+bot = commands.Bot(command_prefix="c!", intents=intents, allowed_mentions=allowed_mentions)
 @bot.event
 async def on_ready():
     print(f'Bot is ready. Logged in as {bot.user}')
