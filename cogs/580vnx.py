@@ -5,6 +5,7 @@ from PIL import Image
 import os
 import uuid
 import numpy as np
+from discord.utils import escape_markdown, escape_mentions
 
 RESOURCE_PATH = Path(__file__).resolve().parent.parent / "resources" / "580vnx"
 font_1byte = RESOURCE_PATH / "display_font_1byte.png"
@@ -140,6 +141,7 @@ class fx_580VNX(commands.Cog, name="CASIO"):
         
     @commands.command(name='findguide', aliases=["find", "fg"], help="Tìm tài liệu liên quan đến fx-580VN X")
     async def findguide(self, ctx, *, keyword: str):
+        keyword = escape_markdown(keyword).escape_markdown(keyword)
         found_messages = []
         channel = self.bot.get_channel(1424392041735127080)
         async for message in channel.history(limit=1000):
