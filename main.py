@@ -27,22 +27,11 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send("Lệnh không tồn tại! Dùng c!help để xem các lệnh.")
     elif isinstance(error, commands.MissingPermissions):
-        await ctx.send(f"Bạn thiếu các quyền sau để chạy lệnh: {', '.join(error.missing_permissions)}")
+        await ctx.send(f"Người dùng thiếu các quyền sau để thực lệnh: {', '.join(error.missing_permissions)}")
     elif isinstance(error, commands.BadArgument):
         await ctx.send("Tham số không hợp lệ. Vui lòng thử lại")
     else:
         await ctx.send(f"Lệnh gặp sự cố khi chạy: ```\n{str(error)}\n```")
-
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
-    channel_id = message.channel.id
-    if channel_id != 1424604740221796483 and message.content.startswith("c!") and message.author.id != 1085862271399493732:
-        await message.channel.send("Không dùng bot ngoài <#1424604740221796483> !")
-        return
-    
-    await bot.process_commands(message)
 
 sniped_messages = {}
 @bot.event
