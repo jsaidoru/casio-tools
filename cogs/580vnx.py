@@ -141,7 +141,7 @@ class fx_580VNX(commands.Cog, name="CASIO"):
         
     @commands.command(name='findguide', aliases=["find", "fg"], help="Tìm tài liệu liên quan đến fx-580VN X")
     async def findguide(self, ctx, *, keyword: str):
-        keyword = escape_markdown(keyword).escape_mentions(keyword)
+        keyword = escape_markdown(keyword)(escape_mentions(keyword))
         found_messages = []
         channel = self.bot.get_channel(1424392041735127080)
         async for message in channel.history(limit=1000):
