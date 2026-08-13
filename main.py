@@ -6,7 +6,7 @@ import json
 
 intents = discord.Intents.all()
 intents.message_content = True
-allowed_mentions = discord.AllowedMentions(everyone=False, here=False)
+allowed_mentions = discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=True)
 
 bot = commands.Bot(command_prefix="c!", intents=intents, allowed_mentions=allowed_mentions)
 @bot.event
